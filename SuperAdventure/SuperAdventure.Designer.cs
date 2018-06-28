@@ -36,7 +36,7 @@
             this.labelGold = new System.Windows.Forms.Label();
             this.labelExperience = new System.Windows.Forms.Label();
             this.labelLevel = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.selectionLabel = new System.Windows.Forms.Label();
             this.cboWeapons = new System.Windows.Forms.ComboBox();
             this.cboPotions = new System.Windows.Forms.ComboBox();
             this.btnUseWeapon = new System.Windows.Forms.Button();
@@ -125,14 +125,15 @@
             this.labelLevel.TabIndex = 7;
             this.labelLevel.Text = "0";
             // 
-            // label5
+            // selectionLabel
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(617, 531);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(69, 13);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Select action";
+            this.selectionLabel.AutoSize = true;
+            this.selectionLabel.Location = new System.Drawing.Point(617, 531);
+            this.selectionLabel.Name = "selectionLabel";
+            this.selectionLabel.Size = new System.Drawing.Size(69, 13);
+            this.selectionLabel.TabIndex = 8;
+            this.selectionLabel.Text = "Select action";
+            this.selectionLabel.Visible = false;
             // 
             // cboWeapons
             // 
@@ -214,15 +215,15 @@
             // 
             this.rtbLocation.Location = new System.Drawing.Point(347, 19);
             this.rtbLocation.Name = "rtbLocation";
-            this.rtbLocation.Size = new System.Drawing.Size(360, 105);
+            this.rtbLocation.Size = new System.Drawing.Size(360, 40);
             this.rtbLocation.TabIndex = 17;
             this.rtbLocation.Text = "";
             // 
             // rtbMessages
             // 
-            this.rtbMessages.Location = new System.Drawing.Point(347, 130);
+            this.rtbMessages.Location = new System.Drawing.Point(347, 65);
             this.rtbMessages.Name = "rtbMessages";
-            this.rtbMessages.Size = new System.Drawing.Size(360, 286);
+            this.rtbMessages.Size = new System.Drawing.Size(360, 351);
             this.rtbMessages.TabIndex = 18;
             this.rtbMessages.Text = "";
             // 
@@ -275,7 +276,7 @@
             this.Controls.Add(this.btnUseWeapon);
             this.Controls.Add(this.cboPotions);
             this.Controls.Add(this.cboWeapons);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.selectionLabel);
             this.Controls.Add(this.labelLevel);
             this.Controls.Add(this.labelExperience);
             this.Controls.Add(this.labelGold);
@@ -303,7 +304,7 @@
         private System.Windows.Forms.Label labelGold;
         private System.Windows.Forms.Label labelExperience;
         private System.Windows.Forms.Label labelLevel;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label selectionLabel;
         private System.Windows.Forms.ComboBox cboWeapons;
         private System.Windows.Forms.ComboBox cboPotions;
         private System.Windows.Forms.Button btnUseWeapon;

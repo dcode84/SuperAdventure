@@ -15,20 +15,16 @@ namespace SuperAdventure
     {
         private Player _player;
         private Monster _currentMonster;
+        
 
         public SuperAdventure()
         {
             InitializeComponent();
 
-            _player = new Player(20, 0, 1, 10, 10);
+            _player = new Player(20, 0, 10, 10);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_RUSTY_SWORD), 1));
-
-            labelHitPoints.Text = _player.CurrentHitPoints.ToString();
-            labelGold.Text = _player.Gold.ToString();
-            labelExperience.Text = _player.ExperiencePoints.ToString();
-            labelLevel.Text = _player.Level.ToString();
-
+            UpdatePlayerStats();
         }
 
         private void btnNorth_Click(object sender, EventArgs e)
@@ -67,8 +63,7 @@ namespace SuperAdventure
             btnSouth.Visible = (newLocation.LocationToSouth != null);
             btnWest.Visible = (newLocation.LocationToWest != null);
 
-            rtbLocation.Text = newLocation.Name + Environment.NewLine;
-            rtbLocation.Text = newLocation.Description + Environment.NewLine;
+            rtbLocation.Text = newLocation.Name + Environment.NewLine + newLocation.Description + Environment.NewLine;
 
             _player.CurrentHitPoints = _player.MaximumHitPoints;
 
@@ -103,6 +98,7 @@ namespace SuperAdventure
 
                             _player.AddItemToInventory(newLocation.QuestAvailableHere.RewardItem);
                             _player.MarkQuestCompleted(newLocation.QuestAvailableHere);
+                            ScrollToBottomOfMessages();
                         }
                     }
                 }
@@ -110,26 +106,27 @@ namespace SuperAdventure
                 {
                     rtbMessages.Text += "You receive the " + newLocation.QuestAvailableHere.Name + " quest" + Environment.NewLine;
                     rtbMessages.Text += newLocation.QuestAvailableHere.Description + Environment.NewLine;
-                    rtbMessages.Text += "to complete it, return with: " + Environment.NewLine;
-                    foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompletionItems)
-                    {
-                        if (qci.Quantity == 1)
-                        {
-                            rtbMessages.Text += qci.Quantity.ToString() + " " + qci.Details.Name + Environment.NewLine;
-                        }
-                        else
-                        {
-                            rtbMessages.Text += qci.Quantity.ToString() + " " + qci.Details.NamePlural + Environment.NewLine;
-                        }
-                    }
+                    //foreach (QuestCompletionItem qci in newLocation.QuestAvailableHere.QuestCompletionItems)
+                    //{
+                    //    if (qci.Quantity == 1)
+                    //    {
+                    //        rtbMessages.Text += qci.Quantity.ToString() + " " + qci.Details.Name + Environment.NewLine;
+                    //    }
+                    //    else
+                    //    {
+                    //        rtbMessages.Text += qci.Quantity.ToString() + " " + qci.Details.NamePlural + Environment.NewLine;
+                    //    }
+                    //}
                     rtbMessages.Text += Environment.NewLine;
                     _player.Quests.Add(new PlayerQuest(newLocation.QuestAvailableHere));
+                    ScrollToBottomOfMessages();
                 }
             }
 
             if (newLocation.MonsterLivingHere != null)
             {
                 rtbMessages.Text += "You see a " + newLocation.MonsterLivingHere.Name + Environment.NewLine;
+                ScrollToBottomOfMessages();
 
                 // Make a new monster, using the values from the standard monster in the World.Monster list
                 Monster standardMonster = World.MonsterByID(newLocation.MonsterLivingHere.ID);
@@ -142,6 +139,7 @@ namespace SuperAdventure
                     _currentMonster.LootTable.Add(lootItem);
                 }
 
+                selectionLabel.Visible = true;
                 cboWeapons.Visible = true;
                 cboPotions.Visible = true;
                 btnUseWeapon.Visible = true;
@@ -150,7 +148,7 @@ namespace SuperAdventure
             else
             {
                 _currentMonster = null;
-
+                selectionLabel.Visible = false;
                 cboWeapons.Visible = false;
                 cboPotions.Visible = false;
                 btnUseWeapon.Visible = false;
@@ -262,13 +260,28 @@ namespace SuperAdventure
             rtbMessages.Text += "The " + _currentMonster.Name + " has hit you for "
                 + damageToPlayer.ToString() + " damage." + Environment.NewLine;
 
-            labelHitPoints.Text = _player.CurrentHitPoints.ToString();
+            UpdatePlayerStats();
 
             if (_player.CurrentHitPoints <= 0)
             {
                 rtbMessages.Text += Environment.NewLine + "You have died." + Environment.NewLine;
                 MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             }
+            ScrollToBottomOfMessages();
+        }
+
+        private void ScrollToBottomOfMessages()
+        {
+            rtbMessages.SelectionStart = rtbMessages.Text.Length;
+            rtbMessages.ScrollToCaret();
+        }
+
+        private void UpdatePlayerStats()
+        {
+            labelHitPoints.Text = _player.CurrentHitPoints.ToString();
+            labelGold.Text = _player.Gold.ToString();
+            labelExperience.Text = _player.ExperiencePoints.ToString();
+            labelLevel.Text = _player.Level.ToString();
         }
 
         private void btnUseWeapon_Click(object sender, EventArgs e)
@@ -289,9 +302,10 @@ namespace SuperAdventure
 
                 rtbMessages.Text += "Gained: " + Environment.NewLine;
                 rtbMessages.Text += _currentMonster.RewardExperiencePoints + " experience" + Environment.NewLine;
-                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
                 rtbMessages.Text += _currentMonster.RewardGold + " gold" + Environment.NewLine;
+                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
                 _player.Gold += _currentMonster.RewardGold;
+                UpdatePlayerStats();
 
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
 
@@ -330,11 +344,7 @@ namespace SuperAdventure
                     }
                 }
 
-                labelHitPoints.Text = _player.CurrentHitPoints.ToString();
-                labelGold.Text = _player.Gold.ToString();
-                labelExperience.Text = _player.ExperiencePoints.ToString();
-                labelLevel.Text = _player.Level.ToString();
-
+                UpdatePlayerStats();
                 UpdateInventoryListInUI();
                 UpdateWeaponListInUI();
                 UpdatePotionListInUI();
@@ -342,6 +352,7 @@ namespace SuperAdventure
                 rtbMessages.Text += Environment.NewLine;
 
                 MoveTo(_player.CurrentLocation);
+                ScrollToBottomOfMessages();
             }
             else
             {
@@ -367,8 +378,7 @@ namespace SuperAdventure
                 rtbMessages.Text = "You have healed for " + currentHealingPotion.AmountToHeal.ToString() + Environment.NewLine;
             }
 
-            labelHitPoints.Text = _player.CurrentHitPoints.ToString();
-
+            UpdatePlayerStats();
             _player.RemoveHealingPotionFromInventory(currentHealingPotion);
             UpdateInventoryListInUI();
             UpdatePotionListInUI();
