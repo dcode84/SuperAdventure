@@ -14,18 +14,19 @@ namespace SuperAdventure
     public partial class SuperAdventure : Form
     {
         private Player _player;
-        private Monster _currentMonster;
-        
+        private Monster _currentMonster;        
 
         public SuperAdventure()
         {
             InitializeComponent();
 
-            _player = new Player(20, 0, 10, 10);
+            _player = new Player(20, 1, 0, 10, 10);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_RUSTY_SWORD), 1));
             UpdatePlayerStats();
         }
+
+        
 
         private void btnNorth_Click(object sender, EventArgs e)
         {
@@ -252,23 +253,6 @@ namespace SuperAdventure
             }
         }
 
-        private void MonsterDPS()
-        {
-            int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaximumDamage);
-            _player.CurrentHitPoints -= damageToPlayer;
-
-            rtbMessages.Text += "The " + _currentMonster.Name + " has hit you for "
-                + damageToPlayer.ToString() + " damage." + Environment.NewLine;
-
-            UpdatePlayerStats();
-
-            if (_player.CurrentHitPoints <= 0)
-            {
-                rtbMessages.Text += Environment.NewLine + "You have died." + Environment.NewLine;
-                MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
-            }
-            ScrollToBottomOfMessages();
-        }
 
         private void ScrollToBottomOfMessages()
         {
@@ -278,6 +262,7 @@ namespace SuperAdventure
 
         private void UpdatePlayerStats()
         {
+            _player.LevelUp();
             labelHitPoints.Text = _player.CurrentHitPoints.ToString();
             labelGold.Text = _player.Gold.ToString();
             labelExperience.Text = _player.ExperiencePoints.ToString();
@@ -303,7 +288,15 @@ namespace SuperAdventure
                 rtbMessages.Text += "Gained: " + Environment.NewLine;
                 rtbMessages.Text += _currentMonster.RewardExperiencePoints + " experience" + Environment.NewLine;
                 rtbMessages.Text += _currentMonster.RewardGold + " gold" + Environment.NewLine;
-                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+
+                if (_currentMonster.RewardExperiencePoints > _player.ExperiencePointsNeeded)
+                {
+                    _currentMonster.RewardExperiencePoints = _player.ExperiencePointsNeeded;
+                    _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+                }
+                else
+                    _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+
                 _player.Gold += _currentMonster.RewardGold;
                 UpdatePlayerStats();
 
@@ -378,11 +371,30 @@ namespace SuperAdventure
                 rtbMessages.Text = "You have healed for " + currentHealingPotion.AmountToHeal.ToString() + Environment.NewLine;
             }
 
-            UpdatePlayerStats();
             _player.RemoveHealingPotionFromInventory(currentHealingPotion);
+            UpdatePlayerStats();
             UpdateInventoryListInUI();
             UpdatePotionListInUI();
             MonsterDPS();
+        }
+
+        private void MonsterDPS()
+        {
+            int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaximumDamage);
+            _player.CurrentHitPoints -= damageToPlayer;
+
+
+            rtbMessages.Text += "The " + _currentMonster.Name + " has hit you for "
+                + damageToPlayer.ToString() + " damage." + Environment.NewLine;
+
+            UpdatePlayerStats();
+
+            if (_player.CurrentHitPoints <= 0)
+            {
+                rtbMessages.Text += Environment.NewLine + "You have died." + Environment.NewLine;
+                MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
+            }
+            ScrollToBottomOfMessages();
         }
     }
 }

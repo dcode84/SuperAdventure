@@ -9,26 +9,39 @@ namespace Engine
     public class Player : LivingCreature
     {
         public int Gold { get; set; }
+        public int Level { get; set; }
         public int ExperiencePoints { get; set; }
+        public const double growthModifier = 1.618;
 
-        public int Level
+        public int ExperiencePointsNeeded
         {
-            get { return ((ExperiencePoints / 100) + 1); }
+            get { return (int) ((Level * 50) * (Level * growthModifier)); }
         }
 
         public Location CurrentLocation { get; set; }
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
 
-        public Player (int gold, int experiencePoints, int maximumHitPoints, int currentHitPoints) 
+        public Player (int gold, int level, int experiencePoints, int maximumHitPoints, int currentHitPoints) 
             : base(maximumHitPoints, currentHitPoints)
         {
             Gold = gold;
+            Level = level;
             ExperiencePoints = experiencePoints;
             Inventory = new List<InventoryItem>();
             Quests = new List<PlayerQuest>();
         }
 
+        public void LevelUp()
+        {
+            while (ExperiencePoints >= ExperiencePointsNeeded)
+            {
+                int extraEXP = ExperiencePoints - (int)ExperiencePointsNeeded;
+                Level++;
+                ExperiencePoints = extraEXP;
+            }
+        }
+       
         public bool HasRequiredItemToEnterThisLocation(Location location)
         {
             // Check if there is a item required to enter and checks if the player has this item
