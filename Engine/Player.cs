@@ -11,7 +11,7 @@ namespace Engine
         public int Gold { get; set; }
         public int Level { get; set; }
         public int ExperiencePoints { get; set; }
-        public const double growthModifier = 1.618;
+        private const double growthModifier = 1.618;
 
         public int ExperiencePointsNeeded
         {
