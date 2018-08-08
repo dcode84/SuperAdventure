@@ -49,6 +49,8 @@
             this.rtbMessages = new System.Windows.Forms.RichTextBox();
             this.dgvInventory = new System.Windows.Forms.DataGridView();
             this.dgvQuests = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
+            this.experienceProgressBar = new CustomControls.CustomProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).BeginInit();
             this.SuspendLayout();
@@ -110,7 +112,7 @@
             // labelExperience
             // 
             this.labelExperience.AutoSize = true;
-            this.labelExperience.Location = new System.Drawing.Point(110, 73);
+            this.labelExperience.Location = new System.Drawing.Point(202, 9);
             this.labelExperience.Name = "labelExperience";
             this.labelExperience.Size = new System.Drawing.Size(13, 13);
             this.labelExperience.TabIndex = 6;
@@ -128,7 +130,7 @@
             // selectionLabel
             // 
             this.selectionLabel.AutoSize = true;
-            this.selectionLabel.Location = new System.Drawing.Point(617, 531);
+            this.selectionLabel.Location = new System.Drawing.Point(499, 541);
             this.selectionLabel.Name = "selectionLabel";
             this.selectionLabel.Size = new System.Drawing.Size(69, 13);
             this.selectionLabel.TabIndex = 8;
@@ -153,7 +155,7 @@
             // 
             // btnUseWeapon
             // 
-            this.btnUseWeapon.Location = new System.Drawing.Point(620, 559);
+            this.btnUseWeapon.Location = new System.Drawing.Point(496, 557);
             this.btnUseWeapon.Name = "btnUseWeapon";
             this.btnUseWeapon.Size = new System.Drawing.Size(75, 23);
             this.btnUseWeapon.TabIndex = 11;
@@ -163,7 +165,7 @@
             // 
             // btnUsePotion
             // 
-            this.btnUsePotion.Location = new System.Drawing.Point(620, 593);
+            this.btnUsePotion.Location = new System.Drawing.Point(496, 593);
             this.btnUsePotion.Name = "btnUsePotion";
             this.btnUsePotion.Size = new System.Drawing.Size(75, 23);
             this.btnUsePotion.TabIndex = 12;
@@ -259,11 +261,30 @@
             this.dgvQuests.Size = new System.Drawing.Size(312, 189);
             this.dgvQuests.TabIndex = 20;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(632, 559);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 21;
+            this.button1.Text = "Character";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.btnCharacter_Click);
+            // 
+            // experienceProgressBar
+            // 
+            this.experienceProgressBar.Location = new System.Drawing.Point(174, 87);
+            this.experienceProgressBar.Name = "experienceProgressBar";
+            this.experienceProgressBar.Size = new System.Drawing.Size(128, 25);
+            this.experienceProgressBar.TabIndex = 22;
+            // 
             // SuperAdventure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 651);
+            this.Controls.Add(this.experienceProgressBar);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.dgvQuests);
             this.Controls.Add(this.dgvInventory);
             this.Controls.Add(this.rtbMessages);
@@ -317,6 +338,8 @@
         private System.Windows.Forms.RichTextBox rtbMessages;
         private System.Windows.Forms.DataGridView dgvInventory;
         private System.Windows.Forms.DataGridView dgvQuests;
+        private System.Windows.Forms.Button button1;
+        private CustomControls.CustomProgressBar experienceProgressBar;
     }
 }
 

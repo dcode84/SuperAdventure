@@ -12,31 +12,39 @@ namespace Engine
         public int Level { get; set; }
         public int ExperiencePoints { get; set; }
         private const double growthModifier = 1.618;
-
-        public int ExperiencePointsNeeded
+        public int ComputeExperiencePoints
         {
             get { return (int) ((Level * 50) * (Level * growthModifier)); }
         }
+        public int Strength { get; set; }
+        public int Intelligence { get; set; }
+        public int Vitality { get; set; }
+        public int Defense { get; set; }
 
         public Location CurrentLocation { get; set; }
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
 
-        public Player (int gold, int level, int experiencePoints, int maximumHitPoints, int currentHitPoints) 
+        public Player (int gold, int level, int experiencePoints, int strength, int intelligence, int vitality, int defense, 
+                       int maximumHitPoints, int currentHitPoints) 
             : base(maximumHitPoints, currentHitPoints)
         {
             Gold = gold;
             Level = level;
             ExperiencePoints = experiencePoints;
+            Strength = strength;
+            Intelligence = intelligence;
+            Vitality = vitality;
+            Defense = defense;
             Inventory = new List<InventoryItem>();
             Quests = new List<PlayerQuest>();
         }
 
         public void LevelUp()
         {
-            while (ExperiencePoints >= ExperiencePointsNeeded)
+            while (ExperiencePoints >= ComputeExperiencePoints)
             {
-                int extraEXP = ExperiencePoints - (int)ExperiencePointsNeeded;
+                int extraEXP = ExperiencePoints - ComputeExperiencePoints;
                 Level++;
                 ExperiencePoints = extraEXP;
             }
