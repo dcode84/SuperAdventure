@@ -51,7 +51,6 @@
     <Compile Include="CharacterStatistics.Designer.cs">
       <DependentUpon>CharacterStatistics.cs</DependentUpon>
     </Compile>
-    <Compile Include="RichTextBoxExtensions.cs" />
     <Compile Include="SuperAdventure.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +95,10 @@
     <ProjectReference Include="..\Engine\Engine.csproj">
       <Project>{f17d1c81-895f-4f51-8864-ed22b97b3a00}</Project>
       <Name>Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Extensions\Extensions.csproj">
+      <Project>{37faf171-9bc0-4e4a-92a5-032eb633177f}</Project>
+      <Name>Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

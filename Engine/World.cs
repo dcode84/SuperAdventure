@@ -67,10 +67,10 @@ namespace Engine
             Items.Add(new Item(ITEM_ID_SPIDER_FANG, "Spider fang", "Spider fangs"));
             Items.Add(new Item(ITEM_ID_SPIDER_SILK, "Spider silk", "Spider silks"));
             Items.Add(new Item(ITEM_ID_ADVANTURER_PASS, "Adventurers pass", "Adventurers passes"));
-            Items.Add(new ArmorHelm(ITEM_ID_COTTON_HELM, "Cotton Helm", "Cotton Helmets", 3, 1));
-            Items.Add(new ArmorChest(ITEM_ID_COTTON_SHIRT, "Cotton Shirt", "Cotton Shirts", 10, 2));
-            Items.Add(new ArmorPants(ITEM_ID_COTTON_PANTS, "Cotton Pants", "Cotton Pants", 7, 3));
-            Items.Add(new ArmorGloves(ITEM_ID_COTTON_GLOVES, "Cotton Gloves", "Cotton Gloves", 5, 4));
+            Items.Add(new ArmorHelm(ITEM_ID_COTTON_HELM, "Cotton Helm", "Cotton Helmets", 3, "cloth"));
+            Items.Add(new ArmorChest(ITEM_ID_COTTON_SHIRT, "Cotton Shirt", "Cotton Shirts", 10, "cloth"));
+            Items.Add(new ArmorPants(ITEM_ID_COTTON_PANTS, "Cotton Pants", "Cotton Pants", 7, "cloth"));
+            Items.Add(new ArmorGloves(ITEM_ID_COTTON_GLOVES, "Cotton Gloves", "Cotton Gloves", 5, "cloth"));
         }
 
         private static void PopulateMonsters()

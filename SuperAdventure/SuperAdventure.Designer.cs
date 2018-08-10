@@ -34,7 +34,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.labelHitPoints = new System.Windows.Forms.Label();
             this.labelGold = new System.Windows.Forms.Label();
-            this.labelExperience = new System.Windows.Forms.Label();
             this.labelLevel = new System.Windows.Forms.Label();
             this.selectionLabel = new System.Windows.Forms.Label();
             this.cboWeapons = new System.Windows.Forms.ComboBox();
@@ -51,6 +50,7 @@
             this.dgvQuests = new System.Windows.Forms.DataGridView();
             this.button1 = new System.Windows.Forms.Button();
             this.experienceProgressBar = new CustomControls.CustomProgressBar();
+            this.labelDamageReduction = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).BeginInit();
             this.SuspendLayout();
@@ -108,15 +108,6 @@
             this.labelGold.Size = new System.Drawing.Size(13, 13);
             this.labelGold.TabIndex = 5;
             this.labelGold.Text = "0";
-            // 
-            // labelExperience
-            // 
-            this.labelExperience.AutoSize = true;
-            this.labelExperience.Location = new System.Drawing.Point(202, 9);
-            this.labelExperience.Name = "labelExperience";
-            this.labelExperience.Size = new System.Drawing.Size(13, 13);
-            this.labelExperience.TabIndex = 6;
-            this.labelExperience.Text = "0";
             // 
             // labelLevel
             // 
@@ -273,16 +264,26 @@
             // 
             // experienceProgressBar
             // 
-            this.experienceProgressBar.Location = new System.Drawing.Point(174, 87);
+            this.experienceProgressBar.Location = new System.Drawing.Point(87, 71);
             this.experienceProgressBar.Name = "experienceProgressBar";
-            this.experienceProgressBar.Size = new System.Drawing.Size(128, 25);
+            this.experienceProgressBar.Size = new System.Drawing.Size(128, 22);
             this.experienceProgressBar.TabIndex = 22;
+            // 
+            // labelDamageReduction
+            // 
+            this.labelDamageReduction.AutoSize = true;
+            this.labelDamageReduction.Location = new System.Drawing.Point(270, 45);
+            this.labelDamageReduction.Name = "labelDamageReduction";
+            this.labelDamageReduction.Size = new System.Drawing.Size(13, 13);
+            this.labelDamageReduction.TabIndex = 23;
+            this.labelDamageReduction.Text = "0";
             // 
             // SuperAdventure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 651);
+            this.Controls.Add(this.labelDamageReduction);
             this.Controls.Add(this.experienceProgressBar);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.dgvQuests);
@@ -299,7 +300,6 @@
             this.Controls.Add(this.cboWeapons);
             this.Controls.Add(this.selectionLabel);
             this.Controls.Add(this.labelLevel);
-            this.Controls.Add(this.labelExperience);
             this.Controls.Add(this.labelGold);
             this.Controls.Add(this.labelHitPoints);
             this.Controls.Add(this.label4);
@@ -323,7 +323,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label labelHitPoints;
         private System.Windows.Forms.Label labelGold;
-        private System.Windows.Forms.Label labelExperience;
         private System.Windows.Forms.Label labelLevel;
         private System.Windows.Forms.Label selectionLabel;
         private System.Windows.Forms.ComboBox cboWeapons;
@@ -340,6 +339,7 @@
         private System.Windows.Forms.DataGridView dgvQuests;
         private System.Windows.Forms.Button button1;
         private CustomControls.CustomProgressBar experienceProgressBar;
+        private System.Windows.Forms.Label labelDamageReduction;
     }
 }
 

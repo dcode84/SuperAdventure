@@ -29,6 +29,28 @@ namespace SuperAdventure
             UpdatePlayerStats();
         }
 
+        private void setReductionLabel()
+        {
+            double percentDefense = _player.ComputeDamageReduction * 100;
+            labelDamageReduction.Text = string.Format("{0:0.00}", percentDefense);
+        }
+
+        private void setDefensePoints()
+        {
+            ArmorHelm currentHelm = (ArmorHelm)charStatistics.cboHelm.SelectedItem;
+            ArmorChest currentChest = (ArmorChest)charStatistics.cboChest.SelectedItem;
+            ArmorPants currentPants = (ArmorPants)charStatistics.cboPants.SelectedItem;
+            ArmorGloves currentGloves = (ArmorGloves)charStatistics.cboHands.SelectedItem;
+
+            int currentDefensePoints = currentHelm.Defense + currentChest.Defense + currentPants.Defense + currentGloves.Defense;
+            _player.Defense = currentDefensePoints;
+            //if (currentHelm != null && currentChest != null && currentPants != null && currentGloves != null)
+            //{
+            //}
+
+            setReductionLabel();
+        }
+
         private void SuperAdventure_Load(object sender, EventArgs e)
         {
             charStatistics.StartPosition = FormStartPosition.Manual;
@@ -385,9 +407,11 @@ namespace SuperAdventure
         {
             _player.LevelUp();
             IncreaseProgressBar();
+            UpdateEquipmentListInUI();
+            setDefensePoints();
             labelHitPoints.Text = _player.CurrentHitPoints.ToString();
             labelGold.Text = _player.Gold.ToString();
-            labelExperience.Text = _player.ExperiencePoints.ToString() + " / " + _player.ComputeExperiencePoints.ToString();
+            // labelExperience.Text = _player.ExperiencePoints.ToString() + " / " + _player.ComputeExperiencePoints.ToString();
             labelLevel.Text = _player.Level.ToString();
         }
 
@@ -398,7 +422,7 @@ namespace SuperAdventure
 
             _currentMonster.CurrentHitPoints -= damageToMonster;
             rtbMessages.AppendText(Environment.NewLine + "You've hit the "
-                                   + _currentMonster.Name + " for " + damageToMonster.ToString() + " damage." + Environment.NewLine);
+                                                       + _currentMonster.Name + " for " + damageToMonster.ToString() + " damage.", true);
 
             if (_currentMonster.CurrentHitPoints <= 0)
             {
@@ -446,12 +470,12 @@ namespace SuperAdventure
                     if (inventoryItem.Quantity == 1)
                     {
                         rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " "
-                            + inventoryItem.Details.Name, true);
+                                                           + inventoryItem.Details.Name, true);
                     }
                     else
                     {
                         rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " "
-                            + inventoryItem.Details.NamePlural, true);
+                                                           + inventoryItem.Details.NamePlural, true);
                     }
                 }
                 UpdatePlayerStats();
@@ -502,7 +526,7 @@ namespace SuperAdventure
             }
             else
             {
-                rtbMessages.AppendText("The " + _currentMonster.Name + " has missed." + Environment.NewLine);
+                rtbMessages.AppendText("The " + _currentMonster.Name + " has missed.", true);
             }
             UpdatePlayerStats();
 

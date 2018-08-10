@@ -23,9 +23,9 @@ namespace SuperAdventure
             e.Cancel = true;
         }
 
-        private void CharacterStatistics_LocationChanged(object sender, EventArgs e)
-        {
-           // SetDesktopLocation(this.Location.X + this.Width, this.Location.Y);
-        }
+        //private void CharacterStatistics_LocationChanged(object sender, EventArgs e)
+        //{
+        //    SetDesktopLocation(this.Location.X + this.Width, this.Location.Y);
+        //}
     }
 }

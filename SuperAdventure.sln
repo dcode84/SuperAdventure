@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Engine", "Engine\Engine.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomControls", "CustomControls\CustomControls.csproj", "{E8BD3E65-14D8-497E-95EA-741C81E961B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Extensions", "Extensions\Extensions.csproj", "{37FAF171-9BC0-4E4A-92A5-032EB633177F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{E8BD3E65-14D8-497E-95EA-741C81E961B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8BD3E65-14D8-497E-95EA-741C81E961B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8BD3E65-14D8-497E-95EA-741C81E961B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37FAF171-9BC0-4E4A-92A5-032EB633177F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37FAF171-9BC0-4E4A-92A5-032EB633177F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37FAF171-9BC0-4E4A-92A5-032EB633177F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37FAF171-9BC0-4E4A-92A5-032EB633177F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

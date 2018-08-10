@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Engine
 {
     public class Player : LivingCreature
-    {
+    { 
         public int Gold { get; set; }
         public int Level { get; set; }
         public int ExperiencePoints { get; set; }
@@ -20,6 +20,10 @@ namespace Engine
         public int Intelligence { get; set; }
         public int Vitality { get; set; }
         public int Defense { get; set; }
+        public double ComputeDamageReduction
+        {
+            get { return (double)Defense / (Defense + 200); }
+        }
 
         public Location CurrentLocation { get; set; }
         public List<InventoryItem> Inventory { get; set; }
@@ -46,13 +50,14 @@ namespace Engine
             {
                 int extraEXP = ExperiencePoints - ComputeExperiencePoints;
                 Level++;
+                MaximumHitPoints = MaximumHitPoints + 1;
                 ExperiencePoints = extraEXP;
             }
         }
        
+            // Check if there is a item required to enter and checks if the player has this item
         public bool HasRequiredItemToEnterThisLocation(Location location)
         {
-            // Check if there is a item required to enter and checks if the player has this item
             if (location.ItemRequiredToEnter == null)
             {
                 return true;
@@ -60,9 +65,9 @@ namespace Engine
             return Inventory.Exists(inventoryItem => inventoryItem.Details.ID == location.ItemRequiredToEnter.ID);
         }
 
+            // Check if the player already has this quest
         public bool HasThisQuest(Quest quest)
         {
-            // Check if the player already has this quest
             return Quests.Exists(playerQuest => playerQuest.Details.ID == quest.ID);
         }
 
@@ -75,15 +80,14 @@ namespace Engine
                     return playerQuest.IsCompleted;
                 }
             }
-
             return false;
         }
 
-        public bool HasAllQuestCompletionItems(Quest quest)
-        {
             // See if the player has all the items needed to complete the quest here
             // Check each item in the player's inventory, to see if they have it, and enough of it
             // If we got there, then the player must have all the required items, and enough of them, to complete the quest.
+        public bool HasAllQuestCompletionItems(Quest quest)
+        {
             foreach (QuestCompletionItem questCompletionItem in quest.QuestCompletionItems)
             {
                 if (!Inventory.Exists(inventoryItem => inventoryItem.Details.ID == questCompletionItem.Details.ID
@@ -95,10 +99,10 @@ namespace Engine
             return true;
         }
 
-        public void RemoveQuestCompletionItems(Quest quest)
-        {
             // Check the list of QuestCompletionItems and check if the items in the inventory match this list,
             // if not null, remove quest items from inventory
+        public void RemoveQuestCompletionItems(Quest quest)
+        {
             foreach (QuestCompletionItem questCompletionItem in quest.QuestCompletionItems)
             {
                 InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.Details.ID == questCompletionItem.Details.ID);
@@ -110,9 +114,9 @@ namespace Engine
             }
         }
 
+            // Check for the item to add, if its null, add 1 to quantity, otherwise increase it by 1
         public void AddItemToInventory(Item itemToAdd)
         {
-            // Check for the item to add, if its null, add 1 to quantity, otherwise increase it by 1
             InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.Details.ID == itemToAdd.ID);
 
             if (item == null)
@@ -125,9 +129,9 @@ namespace Engine
             }
         }
 
+            // Check for a potion in the inventory and decrease its quantity by 1 
         public void RemoveHealingPotionFromInventory(Item potionToRemove)
         {
-            // Check for a potion in the inventory and decrease its quantity by 1 
             InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.Details.ID == potionToRemove.ID);
             if (item != null)
             {
@@ -135,9 +139,9 @@ namespace Engine
             }
         }
 
+            // Find the quest in the player's quest list, if not null, mark as completed
         public void MarkQuestCompleted(Quest quest)
         {
-            // Find the quest in the player's quest list, if not null, mark as completed
             PlayerQuest playerQuest = Quests.SingleOrDefault(playerQ => playerQ.Details.ID == quest.ID);
             if (playerQuest != null)
             {

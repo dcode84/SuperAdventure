@@ -9,9 +9,9 @@ namespace Engine
     public class ArmorPants : Item
     {
         public int Defense { get; set; }
-        public byte ArmorType { get; set; }
+        public string ArmorType { get; set; }
 
-        public ArmorPants(int id, string name, string namePlural, int defenseValue, byte armorType) : base(id, name, namePlural)
+        public ArmorPants(int id, string name, string namePlural, int defenseValue, string armorType) : base(id, name, namePlural)
         {
             Defense = defenseValue;
             ArmorType = armorType;

@@ -10,6 +10,7 @@ namespace CustomControls
         public CustomProgressBar()
         {
             this.SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
+            this.DoubleBuffered = true;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -25,7 +26,6 @@ namespace CustomControls
                 ProgressBarRenderer.DrawHorizontalChunks(g, clip);
             }
 
-            // assumes this.Maximum == 100
             string text = this.Value.ToString() + " / " + this.Maximum.ToString();
 
             using (Font f = new Font(FontFamily.GenericMonospace, 10))
