@@ -14,7 +14,7 @@ namespace SuperAdventure
         private CharacterStatistics charStatistics;
         public const int _offset = -14;
         public bool charStatisticIsOpen = false;
-        public virtual RightToLeft Right {get; set;}
+        public virtual RightToLeft Right { get; set;}
 
         public SuperAdventure()
         {
@@ -41,8 +41,25 @@ namespace SuperAdventure
 
         private void SuperAdventure_Load(object sender, EventArgs e)
         {
-            this.Right = 0;
             MoveSubForm(this, e);
+        }
+
+        private void rtbMessages_TextChanged(object sender, EventArgs e)
+        {
+            const int maxIndex = 100;
+            const int indexToRemove = 0;
+            rtbMessages.SelectionStart = rtbMessages.GetFirstCharIndexFromLine(indexToRemove);
+            rtbMessages.SelectionLength = rtbMessages.Lines[indexToRemove].Length + 1;
+
+            if (rtbMessages.Lines.Length > maxIndex)
+            {
+                rtbMessages.ReadOnly = false;
+                rtbMessages.SelectedText = String.Empty;
+                rtbMessages.ReadOnly = true;
+            }
+
+            ScrollToBottomOfMessages();
+            linesLabel.Text = rtbMessages.Lines.Length.ToString();
         }
 
         private void MouseWheelInventory(object sender, MouseEventArgs e)
@@ -479,7 +496,7 @@ namespace SuperAdventure
         {
             _player.LevelUp();
             charStatistics.statPointsLabel.Text = _player.StatPoints.ToString();
-            IncreaseProgressBar();
+            IncreaseExperienceBar();
             UpdateEquipmentListInUI();
             SetDefensePoints();
             labelHitPoints.Text = _player.CurrentHitPoints.ToString();
@@ -487,11 +504,8 @@ namespace SuperAdventure
             labelLevel.Text = _player.Level.ToString();
         }
 
-        private void btnUseWeapon_Click(object sender, EventArgs e)
+        private void DisplayDamageOnMonster(int damageToMonster)
         {
-            Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
-            int damageToMonster = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
-
             _currentMonster.CurrentHitPoints -= damageToMonster;
 
             if (damageToMonster <= 0)
@@ -504,67 +518,79 @@ namespace SuperAdventure
                                                        + _currentMonster.Name + " for " + damageToMonster.ToString() + " damage.";
                 rtbMessages.AppendText(playerDPS, Color.Blue, true);
             }
+        }
+
+        private void DisplayVictoryText()
+        {
+            rtbMessages.AppendText(Environment.NewLine);
+            rtbMessages.AppendText("You've defeated the " + _currentMonster.Name + ".", true);
+            rtbMessages.AppendText("Gained: ", true);
+            rtbMessages.AppendText(_currentMonster.RewardExperiencePoints + " experience", true);
+            rtbMessages.AppendText(_currentMonster.RewardGold + " gold", true);
+        }
+
+        private void SetExperiencePoints()
+        {
+            if (_currentMonster.RewardExperiencePoints > _player.ComputeExperiencePoints)
+            {
+                _currentMonster.RewardExperiencePoints = _player.ComputeExperiencePoints;
+                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+            }
+            else
+                _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
+        }
+
+        private void SetGold()
+        {
+            _player.Gold += _currentMonster.RewardGold;
+        }
+
+        private void RollLoot(List<InventoryItem> lootedItems)
+        {
+            foreach (LootItem lootItem in _currentMonster.LootTable)
+            {
+                if (RandomNumberGenerator.NumberBetween(1, 100) <= lootItem.DropPercentage)
+                {
+                    lootedItems.Add(new InventoryItem(lootItem.Details, 1));
+                }
+            }
+        }
+
+        private void AddItemsToInventory(List<InventoryItem> lootedItems)
+        {
+            foreach (InventoryItem inventoryItem in lootedItems)
+            {
+                _player.AddItemToInventory(inventoryItem.Details);
+
+                if (inventoryItem.Quantity == 1)
+                {
+                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name, true);
+                }
+                else
+                {
+                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.NamePlural, true);
+                }
+            }
+        }
+
+        private void btnUseWeapon_Click(object sender, EventArgs e)
+        {
+            Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
+            int damageToMonster = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
+
+            DisplayDamageOnMonster(damageToMonster);
 
             if (_currentMonster.CurrentHitPoints <= 0)
             {
-                rtbMessages.AppendText(Environment.NewLine);
-                rtbMessages.AppendText("You've defeated the " + _currentMonster.Name + ".", true);
-                rtbMessages.AppendText("Gained: ", true);
-                rtbMessages.AppendText(_currentMonster.RewardExperiencePoints + " experience", true);
-                rtbMessages.AppendText(_currentMonster.RewardGold + " gold", true);
-
-                if (_currentMonster.RewardExperiencePoints > _player.ComputeExperiencePoints)
-                {
-                    _currentMonster.RewardExperiencePoints = _player.ComputeExperiencePoints;
-                    _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
-                }
-                else
-                    _player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
-
-                _player.Gold += _currentMonster.RewardGold;
-                UpdatePlayerStats();
-
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
-                foreach (LootItem lootItem in _currentMonster.LootTable)
-                {
-                    if (RandomNumberGenerator.NumberBetween(1, 100) <= lootItem.DropPercentage)
-                    {
-                        lootedItems.Add(new InventoryItem(lootItem.Details, 1));
-                    }
-                }
-
-                if (lootedItems.Count == 0)
-                {
-                    foreach (LootItem lootItem in _currentMonster.LootTable)
-                    {
-                        if (lootItem.IsDefaultItem)
-                        {
-                            lootedItems.Add(new InventoryItem(lootItem.Details, 1));
-                        }
-                    }
-                }
-
-                foreach (InventoryItem inventoryItem in lootedItems)
-                {
-                    _player.AddItemToInventory(inventoryItem.Details);
-
-                    if (inventoryItem.Quantity == 1)
-                    {
-                        rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " "
-                                                           + inventoryItem.Details.Name, true);
-                    }
-                    else
-                    {
-                        rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " "
-                                                           + inventoryItem.Details.NamePlural, true);
-                    }
-                }
+                DisplayVictoryText();
+                SetExperiencePoints();
+                RollLoot(lootedItems);
+                AddItemsToInventory(lootedItems);
                 UpdatePlayerStats();
                 UpdateInventoryList();
-                UpdateWeaponListInUI();
                 UpdatePotionListInUI();
-                MoveTo(_player.CurrentLocation);
-                ScrollToBottomOfMessages();
+                MoveTo(_player.CurrentLocation);               
             }
             else
             {
@@ -616,7 +642,7 @@ namespace SuperAdventure
                 rtbMessages.AppendText(Environment.NewLine + "You have died.", true);
                 MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             }
-            ScrollToBottomOfMessages();
+            // ScrollToBottomOfMessages();
         }
 
         private void btnCharacter_Click(object sender, EventArgs e)
@@ -633,27 +659,10 @@ namespace SuperAdventure
             }
         }
 
-        private void IncreaseProgressBar()
+        private void IncreaseExperienceBar()
         {
             experienceProgressBar.Value = _player.ExperiencePoints;
             experienceProgressBar.Maximum = _player.ComputeExperiencePoints;
-        }
-
-        private void rtbMessages_TextChanged(object sender, EventArgs e)
-        {
-            const int maxIndex = 100;
-            const int indexToRemove = 0;
-            rtbMessages.SelectionStart = rtbMessages.GetFirstCharIndexFromLine(indexToRemove);
-            rtbMessages.SelectionLength = rtbMessages.Lines[indexToRemove].Length + 1;
-
-            if (rtbMessages.Lines.Length > maxIndex)
-            {
-                rtbMessages.ReadOnly = false;
-                rtbMessages.SelectedText = String.Empty;
-                rtbMessages.ReadOnly = true;
-            }
-
-            linesLabel.Text = rtbMessages.Lines.Length.ToString();
         }
     }
 }
