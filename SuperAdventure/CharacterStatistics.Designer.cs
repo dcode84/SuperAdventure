@@ -32,6 +32,9 @@
             this.cboHands = new System.Windows.Forms.ComboBox();
             this.cboPants = new System.Windows.Forms.ComboBox();
             this.cboChest = new System.Windows.Forms.ComboBox();
+            this.dgvStats = new System.Windows.Forms.DataGridView();
+            this.statPointsLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStats)).BeginInit();
             this.SuspendLayout();
             // 
             // cboHelm
@@ -66,11 +69,42 @@
             this.cboChest.Size = new System.Drawing.Size(121, 21);
             this.cboChest.TabIndex = 3;
             // 
+            // dgvStats
+            // 
+            this.dgvStats.AllowUserToAddRows = false;
+            this.dgvStats.AllowUserToDeleteRows = false;
+            this.dgvStats.AllowUserToResizeColumns = false;
+            this.dgvStats.AllowUserToResizeRows = false;
+            this.dgvStats.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvStats.ColumnHeadersVisible = false;
+            this.dgvStats.Cursor = System.Windows.Forms.Cursors.Default;
+            this.dgvStats.Enabled = false;
+            this.dgvStats.EnableHeadersVisualStyles = false;
+            this.dgvStats.Location = new System.Drawing.Point(13, 131);
+            this.dgvStats.MultiSelect = false;
+            this.dgvStats.Name = "dgvStats";
+            this.dgvStats.ReadOnly = true;
+            this.dgvStats.RowHeadersVisible = false;
+            this.dgvStats.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvStats.Size = new System.Drawing.Size(120, 150);
+            this.dgvStats.TabIndex = 4;
+            // 
+            // statPointsLabel
+            // 
+            this.statPointsLabel.AutoSize = true;
+            this.statPointsLabel.Location = new System.Drawing.Point(237, 184);
+            this.statPointsLabel.Name = "statPointsLabel";
+            this.statPointsLabel.Size = new System.Drawing.Size(13, 13);
+            this.statPointsLabel.TabIndex = 5;
+            this.statPointsLabel.Text = "0";
+            // 
             // CharacterStatistics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 361);
+            this.Controls.Add(this.statPointsLabel);
+            this.Controls.Add(this.dgvStats);
             this.Controls.Add(this.cboChest);
             this.Controls.Add(this.cboPants);
             this.Controls.Add(this.cboHands);
@@ -83,8 +117,10 @@
             this.ShowIcon = false;
             this.Text = "CharacterStatistics";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CharacterStatistics_FormClosing);
-            this.LocationChanged += new System.EventHandler(this.CharacterStatistics_LocationChanged);
+            this.Load += new System.EventHandler(this.CharacterStatistics_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvStats)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -94,5 +130,7 @@
         public System.Windows.Forms.ComboBox cboHands;
         public System.Windows.Forms.ComboBox cboPants;
         public System.Windows.Forms.ComboBox cboChest;
+        public System.Windows.Forms.DataGridView dgvStats;
+        public System.Windows.Forms.Label statPointsLabel;
     }
 }

@@ -11,14 +11,15 @@ namespace SuperAdventure
     {
         private Player _player;
         private Monster _currentMonster;
-        public ArmorHelm _armor;
-        public int damageTaken;
-        CharacterStatistics charStatistics = new CharacterStatistics();
+        private CharacterStatistics charStatistics;
+        public const int _offset = -14;
         public bool charStatisticIsOpen = false;
+        public virtual RightToLeft Right {get; set;}
 
         public SuperAdventure()
         {
             InitializeComponent();
+            charStatistics = new CharacterStatistics(this);
             _player = new Player(20, 1, 0, 1, 1, 1, 0, 10, 10);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_RUSTY_SWORD), 1));
@@ -27,15 +28,63 @@ namespace SuperAdventure
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_PANTS), 1));
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_GLOVES), 1));
             UpdatePlayerStats();
+            SetInventoryUI();
+            SetQuestUI();
+            SetCharacterStats();
+            this.Move += new EventHandler(MoveSubForm);
+            this.Resize += new EventHandler(MoveSubForm);
+            this.dgvInventory.ScrollBars = ScrollBars.None;
+            this.dgvInventory.MouseWheel += new MouseEventHandler(MouseWheelInventory);
+            this.dgvQuests.ScrollBars = ScrollBars.None;
+            this.dgvQuests.MouseWheel += new MouseEventHandler(MouseWheelQuests);
         }
 
-        private void setReductionLabel()
+        private void SuperAdventure_Load(object sender, EventArgs e)
+        {
+            this.Right = 0;
+            MoveSubForm(this, e);
+        }
+
+        private void MouseWheelInventory(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0 && dgvInventory.FirstDisplayedScrollingRowIndex > 0)
+            {
+                dgvInventory.FirstDisplayedScrollingRowIndex--;
+            }
+            else if (e.Delta <= 0)
+            {
+                dgvInventory.FirstDisplayedScrollingRowIndex++;
+            }
+        }
+
+        private void MouseWheelQuests(object sender, MouseEventArgs e)
+        {
+            if (e.Delta > 0 && dgvQuests.FirstDisplayedScrollingRowIndex > 0)
+            {
+                dgvQuests.FirstDisplayedScrollingRowIndex--;
+            }
+            else if (e.Delta <= 0)
+            {
+                dgvQuests.FirstDisplayedScrollingRowIndex++;
+            }
+        }
+
+        protected void MoveSubForm(object sender, EventArgs e)
+        {
+            if (charStatistics != null)
+            {
+                charStatistics.Left = this.Left + this.Width + _offset;
+                charStatistics.Top = this.Top;
+            }
+        }
+
+        private void SetReductionLabel()
         {
             double percentDefense = _player.ComputeDamageReduction * 100;
             labelDamageReduction.Text = string.Format("{0:0.00}", percentDefense);
         }
 
-        private void setDefensePoints()
+        private void SetDefensePoints()
         {
             ArmorHelm currentHelm = (ArmorHelm)charStatistics.cboHelm.SelectedItem;
             ArmorChest currentChest = (ArmorChest)charStatistics.cboChest.SelectedItem;
@@ -44,21 +93,7 @@ namespace SuperAdventure
 
             int currentDefensePoints = currentHelm.Defense + currentChest.Defense + currentPants.Defense + currentGloves.Defense;
             _player.Defense = currentDefensePoints;
-            //if (currentHelm != null && currentChest != null && currentPants != null && currentGloves != null)
-            //{
-            //}
-
-            setReductionLabel();
-        }
-
-        private void SuperAdventure_Load(object sender, EventArgs e)
-        {
-            charStatistics.StartPosition = FormStartPosition.Manual;
-        }
-
-        private void SuperAdventure_LocationChanged(object sender, EventArgs e)
-        {
-            charStatistics.SetDesktopLocation(this.Location.X + this.Width, this.Location.Y);
+            SetReductionLabel();
         }
 
         private void btnNorth_Click(object sender, EventArgs e)
@@ -179,44 +214,89 @@ namespace SuperAdventure
                 btnUsePotion.Visible = false;
             }
 
-            UpdateInventoryListInUI();
-            UpdateQuestListInUI();
+            UpdateInventoryList();
+            UpdateQuestList();
             UpdateWeaponListInUI();
             UpdatePotionListInUI();
             UpdateEquipmentListInUI();
         }
 
-        private void UpdateInventoryListInUI()
+        private void SetCharacterStats()
         {
+            charStatistics.dgvStats.RowHeadersVisible = false;
+            charStatistics.dgvStats.ColumnHeadersVisible = false;
+            charStatistics.dgvStats.ColumnCount = 2;
+            charStatistics.dgvStats.Columns[0].Width = 87;
+            charStatistics.dgvStats.Columns[1].Width = 30;
+
+            charStatistics.dgvStats.DefaultCellStyle.SelectionBackColor = charStatistics.dgvStats.DefaultCellStyle.BackColor;
+            charStatistics.dgvStats.DefaultCellStyle.SelectionForeColor = charStatistics.dgvStats.DefaultCellStyle.ForeColor;
+            charStatistics.dgvStats.Rows.Add("Strength", _player.Strength.ToString());
+            charStatistics.dgvStats.Rows.Add("Intelligence", _player.Intelligence.ToString());
+            charStatistics.dgvStats.Rows.Add("Vitality", _player.Vitality.ToString());
+            charStatistics.dgvStats.Rows.Add("Defense", _player.Defense.ToString());
+
+            charStatistics.dgvStats.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        }
+
+        private void SetInventoryUI()
+        {
+            dgvInventory.DefaultCellStyle.SelectionBackColor = dgvInventory.DefaultCellStyle.BackColor;
+            dgvInventory.DefaultCellStyle.SelectionForeColor = dgvInventory.DefaultCellStyle.ForeColor;
+            dgvInventory.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgvInventory.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dgvInventory.EnableHeadersVisualStyles = false;
+            dgvInventory.GridColor = Color.Gray;
+
             dgvInventory.RowHeadersVisible = false;
             dgvInventory.ColumnCount = 2;
-            dgvInventory.Columns[0].Name = "Name";
-            dgvInventory.Columns[0].Width = 197;
-            dgvInventory.Columns[1].Name = "Quantity";
-            dgvInventory.Rows.Clear();
+            dgvInventory.Columns[0].Name = "Quantity";
+            dgvInventory.Columns[0].Width = 50;
+            dgvInventory.Columns[1].Name = "Name";
+            dgvInventory.Columns[1].Width = 259;
+            //dgvInventory.Rows.Clear();
+        }
 
+        private void SetQuestUI()
+        {
+            dgvQuests.DefaultCellStyle.SelectionBackColor = dgvQuests.DefaultCellStyle.BackColor;
+            dgvQuests.DefaultCellStyle.SelectionForeColor = dgvQuests.DefaultCellStyle.ForeColor;
+            dgvQuests.RowHeadersVisible = false;
+            dgvQuests.ColumnCount = 2;
+            dgvQuests.Columns[0].Name = "Name";
+            dgvQuests.Columns[0].Width = 198;
+            dgvQuests.Columns[1].Name = "Completed";
+            dgvQuests.Columns[1].Width = 110;
+            //dgvQuests.Rows.Clear();
+        }
+
+        private void UpdateInventoryList()
+        {
+            dgvInventory.Rows.Clear();
             foreach (InventoryItem inventoryItem in _player.Inventory)
             {
                 if (inventoryItem.Quantity > 0)
                 {
-                    dgvInventory.Rows.Add(new[] { inventoryItem.Details.Name, inventoryItem.Quantity.ToString() });
+                    dgvInventory.Rows.Add(new[] { inventoryItem.Quantity.ToString(), inventoryItem.Details.Name });
                 }
             }
         }
 
-        private void UpdateQuestListInUI()
+        private void UpdateQuestList()
         {
-            dgvQuests.RowHeadersVisible = false;
-            dgvQuests.ColumnCount = 2;
-            dgvQuests.Columns[0].Name = "Name";
-            dgvQuests.Columns[0].Width = 197;
-            dgvQuests.Columns[1].Name = "Done?";
             dgvQuests.Rows.Clear();
-
             foreach (PlayerQuest playerQuest in _player.Quests)
             {
                 dgvQuests.Rows.Add(new[] { playerQuest.Details.Name, playerQuest.IsCompleted.ToString() });
             }
+        }
+
+        private void UpdateEquipmentListInUI()
+        {
+            UpdateHelmListInUI();
+            UpdateChestListInUI();
+            UpdatePantsListInUI();
+            UpdateGlovesListInUI();
         }
 
         private void UpdateWeaponListInUI()
@@ -246,14 +326,6 @@ namespace SuperAdventure
                 cboWeapons.ValueMember = "ID";
                 cboWeapons.SelectedIndex = 0;
             }
-        }
-
-        private void UpdateEquipmentListInUI()
-        {
-            UpdateHelmListInUI();
-            UpdateChestListInUI();
-            UpdatePantsListInUI();
-            UpdateGlovesListInUI();
         }
 
         private void UpdateHelmListInUI()
@@ -406,12 +478,12 @@ namespace SuperAdventure
         private void UpdatePlayerStats()
         {
             _player.LevelUp();
+            charStatistics.statPointsLabel.Text = _player.StatPoints.ToString();
             IncreaseProgressBar();
             UpdateEquipmentListInUI();
-            setDefensePoints();
+            SetDefensePoints();
             labelHitPoints.Text = _player.CurrentHitPoints.ToString();
             labelGold.Text = _player.Gold.ToString();
-            // labelExperience.Text = _player.ExperiencePoints.ToString() + " / " + _player.ComputeExperiencePoints.ToString();
             labelLevel.Text = _player.Level.ToString();
         }
 
@@ -421,8 +493,17 @@ namespace SuperAdventure
             int damageToMonster = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
 
             _currentMonster.CurrentHitPoints -= damageToMonster;
-            rtbMessages.AppendText(Environment.NewLine + "You've hit the "
-                                                       + _currentMonster.Name + " for " + damageToMonster.ToString() + " damage.", true);
+
+            if (damageToMonster <= 0)
+            {
+                rtbMessages.AppendText(Environment.NewLine + "You have missed.", true);
+            }
+            else
+            {
+                string playerDPS = Environment.NewLine + "You've hit the "
+                                                       + _currentMonster.Name + " for " + damageToMonster.ToString() + " damage.";
+                rtbMessages.AppendText(playerDPS, Color.Blue, true);
+            }
 
             if (_currentMonster.CurrentHitPoints <= 0)
             {
@@ -479,7 +560,7 @@ namespace SuperAdventure
                     }
                 }
                 UpdatePlayerStats();
-                UpdateInventoryListInUI();
+                UpdateInventoryList();
                 UpdateWeaponListInUI();
                 UpdatePotionListInUI();
                 MoveTo(_player.CurrentLocation);
@@ -491,7 +572,7 @@ namespace SuperAdventure
             }
         }
 
-        public void btnUsePotion_Click(object sender, EventArgs e)
+        private void btnUsePotion_Click(object sender, EventArgs e)
         {
             HealingPotion currentHealingPotion = (HealingPotion)cboPotions.SelectedItem;
             _player.CurrentHitPoints += currentHealingPotion.AmountToHeal;
@@ -509,12 +590,12 @@ namespace SuperAdventure
             }
             _player.RemoveHealingPotionFromInventory(currentHealingPotion);
             UpdatePlayerStats();
-            UpdateInventoryListInUI();
+            UpdateInventoryList();
             UpdatePotionListInUI();
             MonsterDPS();
         }
 
-        public void MonsterDPS()
+        private void MonsterDPS()
         {
             int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaximumDamage);
             _player.CurrentHitPoints -= damageToPlayer;
@@ -556,6 +637,23 @@ namespace SuperAdventure
         {
             experienceProgressBar.Value = _player.ExperiencePoints;
             experienceProgressBar.Maximum = _player.ComputeExperiencePoints;
+        }
+
+        private void rtbMessages_TextChanged(object sender, EventArgs e)
+        {
+            const int maxIndex = 100;
+            const int indexToRemove = 0;
+            rtbMessages.SelectionStart = rtbMessages.GetFirstCharIndexFromLine(indexToRemove);
+            rtbMessages.SelectionLength = rtbMessages.Lines[indexToRemove].Length + 1;
+
+            if (rtbMessages.Lines.Length > maxIndex)
+            {
+                rtbMessages.ReadOnly = false;
+                rtbMessages.SelectedText = String.Empty;
+                rtbMessages.ReadOnly = true;
+            }
+
+            linesLabel.Text = rtbMessages.Lines.Length.ToString();
         }
     }
 }

@@ -51,6 +51,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.experienceProgressBar = new CustomControls.CustomProgressBar();
             this.labelDamageReduction = new System.Windows.Forms.Label();
+            this.linesLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).BeginInit();
             this.SuspendLayout();
@@ -208,6 +209,8 @@
             // 
             this.rtbLocation.Location = new System.Drawing.Point(347, 19);
             this.rtbLocation.Name = "rtbLocation";
+            this.rtbLocation.ReadOnly = true;
+            this.rtbLocation.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
             this.rtbLocation.Size = new System.Drawing.Size(360, 40);
             this.rtbLocation.TabIndex = 17;
             this.rtbLocation.Text = "";
@@ -216,9 +219,11 @@
             // 
             this.rtbMessages.Location = new System.Drawing.Point(347, 65);
             this.rtbMessages.Name = "rtbMessages";
+            this.rtbMessages.ReadOnly = true;
             this.rtbMessages.Size = new System.Drawing.Size(360, 351);
             this.rtbMessages.TabIndex = 18;
             this.rtbMessages.Text = "";
+            this.rtbMessages.TextChanged += new System.EventHandler(this.rtbMessages_TextChanged);
             // 
             // dgvInventory
             // 
@@ -227,8 +232,9 @@
             this.dgvInventory.AllowUserToResizeRows = false;
             this.dgvInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvInventory.Enabled = false;
             this.dgvInventory.Location = new System.Drawing.Point(16, 130);
+            this.dgvInventory.MaximumSize = new System.Drawing.Size(312, 309);
+            this.dgvInventory.MinimumSize = new System.Drawing.Size(312, 309);
             this.dgvInventory.MultiSelect = false;
             this.dgvInventory.Name = "dgvInventory";
             this.dgvInventory.ReadOnly = true;
@@ -278,11 +284,21 @@
             this.labelDamageReduction.TabIndex = 23;
             this.labelDamageReduction.Text = "0";
             // 
+            // linesLabel
+            // 
+            this.linesLabel.AutoSize = true;
+            this.linesLabel.Location = new System.Drawing.Point(247, 79);
+            this.linesLabel.Name = "linesLabel";
+            this.linesLabel.Size = new System.Drawing.Size(13, 13);
+            this.linesLabel.TabIndex = 24;
+            this.linesLabel.Text = "0";
+            // 
             // SuperAdventure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 651);
+            this.Controls.Add(this.linesLabel);
             this.Controls.Add(this.labelDamageReduction);
             this.Controls.Add(this.experienceProgressBar);
             this.Controls.Add(this.button1);
@@ -306,7 +322,11 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(735, 690);
+            this.MinimumSize = new System.Drawing.Size(735, 690);
             this.Name = "SuperAdventure";
+            this.ShowIcon = false;
             this.Text = "Super Adventure";
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).EndInit();
@@ -340,6 +360,7 @@
         private System.Windows.Forms.Button button1;
         private CustomControls.CustomProgressBar experienceProgressBar;
         private System.Windows.Forms.Label labelDamageReduction;
+        private System.Windows.Forms.Label linesLabel;
     }
 }
 

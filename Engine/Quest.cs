@@ -16,7 +16,7 @@ namespace Engine
         public Item RewardItem { get; set; }
         public List<QuestCompletionItem> QuestCompletionItems { get; set; }
 
-        public Quest (int id, String name, String description, int rewardExperiencePoints, int rewardGold)
+        public Quest(int id, String name, String description, int rewardExperiencePoints, int rewardGold)
         {
             ID = id;
             Name = name;
