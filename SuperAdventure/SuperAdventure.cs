@@ -14,7 +14,8 @@ namespace SuperAdventure
         private CharacterStatistics charStatistics;
         public const int _offset = -14;
         public bool charStatisticIsOpen = false;
-        public virtual RightToLeft Right { get; set;}
+        public virtual RightToLeft Right { get; set; }
+
 
         public SuperAdventure()
         {
@@ -28,20 +29,22 @@ namespace SuperAdventure
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_PANTS), 1));
             _player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_GLOVES), 1));
             UpdatePlayerStats();
-            SetInventoryUI();
-            SetQuestUI();
-            SetCharacterStats();
+            dgvInventory.MouseWheel += new MouseEventHandler(dgvInventory_MouseWheel);
+            dgvQuests.MouseWheel += new MouseEventHandler(dgvQuests_MouseWheel);
             this.Move += new EventHandler(MoveSubForm);
             this.Resize += new EventHandler(MoveSubForm);
-            this.dgvInventory.ScrollBars = ScrollBars.None;
-            this.dgvInventory.MouseWheel += new MouseEventHandler(MouseWheelInventory);
-            this.dgvQuests.ScrollBars = ScrollBars.None;
-            this.dgvQuests.MouseWheel += new MouseEventHandler(MouseWheelQuests);
+
         }
 
         private void SuperAdventure_Load(object sender, EventArgs e)
         {
+            SetInventoryUI();
+            SetQuestUI();
+            SetCharacterStats();
+            dgvInventory.ScrollBars = ScrollBars.None;
+            dgvQuests.ScrollBars = ScrollBars.None;
             MoveSubForm(this, e);
+            dgvIRows.Text = dgvInventory.Rows.Count.ToString();
         }
 
         private void rtbMessages_TextChanged(object sender, EventArgs e)
@@ -57,32 +60,41 @@ namespace SuperAdventure
                 rtbMessages.SelectedText = String.Empty;
                 rtbMessages.ReadOnly = true;
             }
-
             ScrollToBottomOfMessages();
-            linesLabel.Text = rtbMessages.Lines.Length.ToString();
+            dgvInventory.Enabled = true;
         }
 
-        private void MouseWheelInventory(object sender, MouseEventArgs e)
+        private void dgvInventory_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0 && dgvInventory.FirstDisplayedScrollingRowIndex > 0)
+            int currentIndex = this.dgvInventory.FirstDisplayedScrollingRowIndex;
+            int scrollLines = SystemInformation.MouseWheelScrollLines;
+
+            if (e.Delta > 0)
             {
-                dgvInventory.FirstDisplayedScrollingRowIndex--;
+                this.dgvInventory.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
             }
-            else if (e.Delta <= 0)
+
+            if (e.Delta < 0)
             {
-                dgvInventory.FirstDisplayedScrollingRowIndex++;
+                if (this.dgvInventory.Rows.Count > (currentIndex + scrollLines))
+                    this.dgvInventory.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
             }
         }
 
-        private void MouseWheelQuests(object sender, MouseEventArgs e)
+        private void dgvQuests_MouseWheel(object sender, MouseEventArgs e)
         {
-            if (e.Delta > 0 && dgvQuests.FirstDisplayedScrollingRowIndex > 0)
+            int currentIndex = this.dgvQuests.FirstDisplayedScrollingRowIndex;
+            int scrollLines = SystemInformation.MouseWheelScrollLines;
+
+            if (e.Delta > 0)
             {
-                dgvQuests.FirstDisplayedScrollingRowIndex--;
+                this.dgvQuests.FirstDisplayedScrollingRowIndex = Math.Max(0, currentIndex - scrollLines);
             }
-            else if (e.Delta <= 0)
+
+            if (e.Delta < 0)
             {
-                dgvQuests.FirstDisplayedScrollingRowIndex++;
+                if (this.dgvQuests.Rows.Count > (currentIndex + scrollLines))
+                    this.dgvQuests.FirstDisplayedScrollingRowIndex = currentIndex + scrollLines;
             }
         }
 
@@ -195,7 +207,6 @@ namespace SuperAdventure
                     rtbMessages.AppendText(newLocation.QuestAvailableHere.Description, true);
                     rtbMessages.AppendText(Environment.NewLine);
                     _player.Quests.Add(new PlayerQuest(newLocation.QuestAvailableHere));
-                    ScrollToBottomOfMessages();
                 }
             }
 
@@ -271,7 +282,6 @@ namespace SuperAdventure
             dgvInventory.Columns[0].Width = 50;
             dgvInventory.Columns[1].Name = "Name";
             dgvInventory.Columns[1].Width = 259;
-            //dgvInventory.Rows.Clear();
         }
 
         private void SetQuestUI()
@@ -284,7 +294,6 @@ namespace SuperAdventure
             dgvQuests.Columns[0].Width = 198;
             dgvQuests.Columns[1].Name = "Completed";
             dgvQuests.Columns[1].Width = 110;
-            //dgvQuests.Rows.Clear();
         }
 
         private void UpdateInventoryList()
@@ -583,19 +592,20 @@ namespace SuperAdventure
             if (_currentMonster.CurrentHitPoints <= 0)
             {
                 List<InventoryItem> lootedItems = new List<InventoryItem>();
+
                 DisplayVictoryText();
                 SetExperiencePoints();
                 RollLoot(lootedItems);
                 AddItemsToInventory(lootedItems);
-                UpdatePlayerStats();
                 UpdateInventoryList();
                 UpdatePotionListInUI();
-                MoveTo(_player.CurrentLocation);               
+                MoveTo(_player.CurrentLocation);
             }
             else
             {
                 MonsterDPS();
             }
+            UpdatePlayerStats();
         }
 
         private void btnUsePotion_Click(object sender, EventArgs e)
@@ -635,14 +645,12 @@ namespace SuperAdventure
             {
                 rtbMessages.AppendText("The " + _currentMonster.Name + " has missed.", true);
             }
-            UpdatePlayerStats();
 
             if (_player.CurrentHitPoints <= 0)
             {
                 rtbMessages.AppendText(Environment.NewLine + "You have died.", true);
                 MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             }
-            // ScrollToBottomOfMessages();
         }
 
         private void btnCharacter_Click(object sender, EventArgs e)

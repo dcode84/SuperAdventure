@@ -51,7 +51,7 @@
             this.button1 = new System.Windows.Forms.Button();
             this.experienceProgressBar = new CustomControls.CustomProgressBar();
             this.labelDamageReduction = new System.Windows.Forms.Label();
-            this.linesLabel = new System.Windows.Forms.Label();
+            this.dgvIRows = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).BeginInit();
             this.SuspendLayout();
@@ -232,14 +232,15 @@
             this.dgvInventory.AllowUserToResizeRows = false;
             this.dgvInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dgvInventory.Enabled = false;
             this.dgvInventory.Location = new System.Drawing.Point(16, 130);
             this.dgvInventory.MaximumSize = new System.Drawing.Size(312, 309);
-            this.dgvInventory.MinimumSize = new System.Drawing.Size(312, 309);
+            this.dgvInventory.MinimumSize = new System.Drawing.Size(312, 200);
             this.dgvInventory.MultiSelect = false;
             this.dgvInventory.Name = "dgvInventory";
             this.dgvInventory.ReadOnly = true;
             this.dgvInventory.RowHeadersVisible = false;
-            this.dgvInventory.Size = new System.Drawing.Size(312, 309);
+            this.dgvInventory.Size = new System.Drawing.Size(312, 200);
             this.dgvInventory.TabIndex = 19;
             // 
             // dgvQuests
@@ -284,21 +285,21 @@
             this.labelDamageReduction.TabIndex = 23;
             this.labelDamageReduction.Text = "0";
             // 
-            // linesLabel
+            // dgvIRows
             // 
-            this.linesLabel.AutoSize = true;
-            this.linesLabel.Location = new System.Drawing.Point(247, 79);
-            this.linesLabel.Name = "linesLabel";
-            this.linesLabel.Size = new System.Drawing.Size(13, 13);
-            this.linesLabel.TabIndex = 24;
-            this.linesLabel.Text = "0";
+            this.dgvIRows.AutoSize = true;
+            this.dgvIRows.Location = new System.Drawing.Point(257, 79);
+            this.dgvIRows.Name = "dgvIRows";
+            this.dgvIRows.Size = new System.Drawing.Size(13, 13);
+            this.dgvIRows.TabIndex = 24;
+            this.dgvIRows.Text = "0";
             // 
             // SuperAdventure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 651);
-            this.Controls.Add(this.linesLabel);
+            this.Controls.Add(this.dgvIRows);
             this.Controls.Add(this.labelDamageReduction);
             this.Controls.Add(this.experienceProgressBar);
             this.Controls.Add(this.button1);
@@ -328,6 +329,7 @@
             this.Name = "SuperAdventure";
             this.ShowIcon = false;
             this.Text = "Super Adventure";
+            this.Load += new System.EventHandler(this.SuperAdventure_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).EndInit();
             this.ResumeLayout(false);
@@ -360,7 +362,7 @@
         private System.Windows.Forms.Button button1;
         private CustomControls.CustomProgressBar experienceProgressBar;
         private System.Windows.Forms.Label labelDamageReduction;
-        private System.Windows.Forms.Label linesLabel;
+        private System.Windows.Forms.Label dgvIRows;
     }
 }
 
