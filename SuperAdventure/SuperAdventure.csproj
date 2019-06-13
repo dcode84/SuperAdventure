@@ -51,6 +51,7 @@
     <Compile Include="CharacterStatistics.Designer.cs">
       <DependentUpon>CharacterStatistics.cs</DependentUpon>
     </Compile>
+    <Compile Include="Processes\QuestProcessor.cs" />
     <Compile Include="SuperAdventure.cs">
       <SubType>Form</SubType>
     </Compile>
