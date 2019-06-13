@@ -57,7 +57,7 @@ namespace Engine
         }
        
         // Check if there is a item required to enter and checks if the player has this item
-        public bool HasRequiredItemToEnterThisLocation(Location location)
+        public bool HasRequiredItemToEnterLocation(Location location)
         {
             if (location.ItemRequiredToEnter == null)
                 return true; 

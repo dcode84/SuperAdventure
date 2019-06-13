@@ -51,7 +51,6 @@
             this.button1 = new System.Windows.Forms.Button();
             this.experienceProgressBar = new CustomControls.CustomProgressBar();
             this.labelDamageReduction = new System.Windows.Forms.Label();
-            this.dgvIRows = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvInventory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuests)).BeginInit();
             this.SuspendLayout();
@@ -232,7 +231,6 @@
             this.dgvInventory.AllowUserToResizeRows = false;
             this.dgvInventory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvInventory.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dgvInventory.Enabled = false;
             this.dgvInventory.Location = new System.Drawing.Point(16, 130);
             this.dgvInventory.MaximumSize = new System.Drawing.Size(312, 309);
             this.dgvInventory.MinimumSize = new System.Drawing.Size(312, 200);
@@ -285,21 +283,11 @@
             this.labelDamageReduction.TabIndex = 23;
             this.labelDamageReduction.Text = "0";
             // 
-            // dgvIRows
-            // 
-            this.dgvIRows.AutoSize = true;
-            this.dgvIRows.Location = new System.Drawing.Point(257, 79);
-            this.dgvIRows.Name = "dgvIRows";
-            this.dgvIRows.Size = new System.Drawing.Size(13, 13);
-            this.dgvIRows.TabIndex = 24;
-            this.dgvIRows.Text = "0";
-            // 
             // SuperAdventure
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(719, 651);
-            this.Controls.Add(this.dgvIRows);
             this.Controls.Add(this.labelDamageReduction);
             this.Controls.Add(this.experienceProgressBar);
             this.Controls.Add(this.button1);
@@ -356,13 +344,12 @@
         private System.Windows.Forms.Button btnSouth;
         private System.Windows.Forms.Button btnWest;
         private System.Windows.Forms.RichTextBox rtbLocation;
-        private System.Windows.Forms.RichTextBox rtbMessages;
         private System.Windows.Forms.DataGridView dgvInventory;
         private System.Windows.Forms.DataGridView dgvQuests;
         private System.Windows.Forms.Button button1;
         private CustomControls.CustomProgressBar experienceProgressBar;
         private System.Windows.Forms.Label labelDamageReduction;
-        private System.Windows.Forms.Label dgvIRows;
+        public System.Windows.Forms.RichTextBox rtbMessages;
     }
 }
 
