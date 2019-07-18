@@ -1,18 +1,17 @@
 ﻿using Engine;
 using System;
 
-namespace SuperAdventure.Processes
+namespace SuperAdventure.Messages
 {
-    public class QuestProcessor
+    public class QuestMessager
     {
-        SuperAdventure _superAdventure;
-
-        public QuestProcessor(SuperAdventure superAdventure)
+        private readonly SuperAdventure _superAdventure;
+        public QuestMessager(SuperAdventure superAdventure)
         {           
             _superAdventure = superAdventure;
         }
 
-        public void ReceiveQuestMessage(Location location)
+        public void ReceiveQuestMessage(ILocation location)
         {
             _superAdventure.rtbMessages.AppendText("You receive the " + location.QuestAvailableHere.Name + " quest");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
@@ -21,21 +20,20 @@ namespace SuperAdventure.Processes
             _superAdventure.ScrollToBottomOfMessages();
         }
 
-        public void CompleteQuestMessage(Location location)
+        public void CompleteQuestMessage(ILocation location)
         {
             _superAdventure.rtbMessages.AppendText("You have completed the " + location.QuestAvailableHere.Name + " Quest.");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
-            CompleteQuest(location);
             _superAdventure.ScrollToBottomOfMessages();
         }
 
-        public void CompleteQuest(Location location)
+        public void CompleteQuest(ILocation location)
         {
             _superAdventure.player.MarkQuestCompleted(location.QuestAvailableHere);
             _superAdventure.player.RemoveQuestCompletionItems(location.QuestAvailableHere);
         }
 
-        public void RewardQuestMessage(Location location)
+        public void RewardQuestMessage(ILocation location)
         {
             _superAdventure.rtbMessages.AppendText("You receive: ");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
@@ -53,7 +51,7 @@ namespace SuperAdventure.Processes
             _superAdventure.ScrollToBottomOfMessages();
         }
 
-        public void RewardQuest(Location location)
+        public void RewardQuest(ILocation location)
         {
             _superAdventure.player.ExperiencePoints += location.QuestAvailableHere.RewardExperiencePoints;
             _superAdventure.player.Gold += location.QuestAvailableHere.RewardGold;
@@ -64,7 +62,7 @@ namespace SuperAdventure.Processes
             }
         }
 
-        public void ReceiveQuest(Location location)
+        public void ReceiveQuest(ILocation location)
         {
             _superAdventure.player.Quests.Add(new PlayerQuest(location.QuestAvailableHere));
         }

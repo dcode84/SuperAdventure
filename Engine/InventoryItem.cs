@@ -3,12 +3,12 @@ namespace Engine
 {
     public class InventoryItem
     {
-        public Item Details { get; set; }
+        public Item ItemInfo { get; set; }
         public int Quantity { get; set; }
 
-        public InventoryItem (Item details, int quantity)
+        public InventoryItem (Item iteminfo, int quantity)
         {
-            Details = details;
+            ItemInfo = iteminfo;
             Quantity = quantity;
         }
     }

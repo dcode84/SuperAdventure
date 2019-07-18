@@ -25,7 +25,7 @@ namespace Engine
             get { return (double)Defense / (Defense + 200); }
         }
         public int StatPoints { get; set; }
-        public Location CurrentLocation { get; set; }
+        public ILocation CurrentLocation { get; set; }
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
 
@@ -57,12 +57,12 @@ namespace Engine
         }
        
         // Check if there is a item required to enter and checks if the player has this item
-        public bool HasRequiredItemToEnterLocation(Location location)
+        public bool HasRequiredItemToEnterLocation(ILocation location)
         {
             if (location.ItemRequiredToEnter == null)
                 return true; 
             
-            return Inventory.Exists(inventoryItem => inventoryItem.Details.ID == location.ItemRequiredToEnter.ID);
+            return Inventory.Exists(inventoryItem => inventoryItem.ItemInfo.ID == location.ItemRequiredToEnter.ID);
         }
 
         // Check if the player already has this quest
@@ -88,7 +88,7 @@ namespace Engine
         {
             foreach (QuestCompletionItem questCompletionItem in quest.QuestCompletionItems)
             {
-                if (!Inventory.Exists(inventoryItem => inventoryItem.Details.ID == questCompletionItem.Details.ID
+                if (!Inventory.Exists(inventoryItem => inventoryItem.ItemInfo.ID == questCompletionItem.Details.ID
                                       && inventoryItem.Quantity >= questCompletionItem.Quantity)) 
                 {
                     return false;
@@ -103,7 +103,7 @@ namespace Engine
         {
             foreach (QuestCompletionItem questCompletionItem in quest.QuestCompletionItems)
             {
-                InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.Details.ID == questCompletionItem.Details.ID);
+                InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == questCompletionItem.Details.ID);
 
                 if (item != null)
                     item.Quantity -= questCompletionItem.Quantity;
@@ -113,7 +113,7 @@ namespace Engine
         // Check for the item to add, if its null, add 1 to quantity, otherwise increase it by 1
         public void AddItemToInventory(Item itemToAdd)
         {
-            InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.Details.ID == itemToAdd.ID);
+            InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == itemToAdd.ID);
 
             if (item == null)
                 Inventory.Add(new InventoryItem(itemToAdd, 1));
@@ -124,7 +124,7 @@ namespace Engine
         // Check for a potion in the inventory and decrease its quantity by 1 
         public void RemoveHealingPotionFromInventory(Item potionToRemove)
         {
-            InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.Details.ID == potionToRemove.ID);
+            InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == potionToRemove.ID);
 
             if (item != null)
                 item.Quantity--;
