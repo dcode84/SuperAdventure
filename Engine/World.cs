@@ -11,7 +11,7 @@ namespace Engine
         public static readonly List<Item> Items = new List<Item>();
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
-        public static readonly List<Location> Locations = new List<Location>();
+        public static readonly List<ILocation> Locations = new List<ILocation>();
 
         #region IDs
         public const int ITEM_ID_RUSTY_SWORD = 1;
@@ -118,27 +118,27 @@ namespace Engine
 
         private static void PopulateLocations()
         {
-            Location home = new Location(LOCATION_ID_HOME, "Home", "This is your home");
+            ILocation home = new Location(LOCATION_ID_HOME, "Home", "This is your home");
 
-            Location townSquare = new Location(LOCATION_ID_TOWN_SQUARE, "Town square", "You see a fountain");
+            ILocation townSquare = new Location(LOCATION_ID_TOWN_SQUARE, "Town square", "You see a fountain");
 
-            Location alchemistHut = new Location(LOCATION_ID_ALCHEMIST_HUT, "Alchemists hut", "There are many strange plants on the shelves.");
+            ILocation alchemistHut = new Location(LOCATION_ID_ALCHEMIST_HUT, "Alchemists hut", "There are many strange plants on the shelves.");
             alchemistHut.QuestAvailableHere = QuestByID(QUEST_ID_CLEAR_ALCHEMIST_GARDEN);
 
-            Location alchemistsGarden = new Location(LOCATION_ID_ALCHEMISTS_GARDEN, "Alchemists garden", "Many strange plants are growing here.");
+            ILocation alchemistsGarden = new Location(LOCATION_ID_ALCHEMISTS_GARDEN, "Alchemists garden", "Many strange plants are growing here.");
             alchemistsGarden.MonsterLivingHere = MonsterByID(MONSTER_ID_RAT);
 
-            Location guardPost = new Location(LOCATION_ID_GUARD_POST, "Guard post", "This is the guards post.");
+            ILocation guardPost = new Location(LOCATION_ID_GUARD_POST, "Guard post", "This is the guards post.");
 
-            Location farmersHouse = new Location(LOCATION_ID_FARM_HOUSE, "Farm house", "There's a few farmers here.");
+            ILocation farmersHouse = new Location(LOCATION_ID_FARM_HOUSE, "Farm house", "There's a few farmers here.");
             farmersHouse.QuestAvailableHere = QuestByID(QUEST_ID_CLEAR_FARMERS_FIELD);
 
-            Location farmersField = new Location(LOCATION_ID_FARM_FIELD, "Farmers field", "There grows this seasons food");
+            ILocation farmersField = new Location(LOCATION_ID_FARM_FIELD, "Farmers field", "There grows this seasons food");
             farmersField.MonsterLivingHere = MonsterByID(MONSTER_ID_SNAKE);
 
-            Location bridge = new Location(LOCATION_ID_BRIDGE, "The Bridge", "This bridge needs to be repaired in some way");
+            ILocation bridge = new Location(LOCATION_ID_BRIDGE, "The Bridge", "This bridge needs to be repaired in some way");
 
-            Location spidersField = new Location(LOCATION_ID_SPIDER_FIELD, "Spiders field", "Do you really want to be here?");
+            ILocation spidersField = new Location(LOCATION_ID_SPIDER_FIELD, "Spiders field", "Do you really want to be here?");
             spidersField.MonsterLivingHere = MonsterByID(MONSTER_ID_GIANT_SPIDER);
 
             #region LOCATIONS

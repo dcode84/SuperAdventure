@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Engine;
 using Extensions;
-using SuperAdventure.Processes;
+using SuperAdventure.Messages;
 
 namespace SuperAdventure
 {
@@ -13,7 +13,7 @@ namespace SuperAdventure
         public Player player;
         private Monster _currentMonster;
         private CharacterStatistics charStatistics;
-        private QuestProcessor _questMessager;
+        private QuestMessager _questMessager;
 
         public bool charStatisticIsOpen = false;
         public new virtual RightToLeft Right { get; set; }
@@ -22,7 +22,7 @@ namespace SuperAdventure
         {
             InitializeComponent();
             charStatistics = new CharacterStatistics(this);
-            _questMessager = new QuestProcessor(this);
+            _questMessager = new QuestMessager(this);
             player = new Player(20, 1, 0, 1, 1, 1, 0, 10, 10);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_RUSTY_SWORD), 1));
@@ -30,6 +30,7 @@ namespace SuperAdventure
             player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_SHIRT), 1));
             player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_PANTS), 1));
             player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_GLOVES), 1));
+            SetInventoryUI();
             UpdatePlayerStats();
             dgvInventory.MouseWheel += new MouseEventHandler(dgvInventory_MouseWheel);
             dgvQuests.MouseWheel += new MouseEventHandler(dgvQuests_MouseWheel);
@@ -40,7 +41,6 @@ namespace SuperAdventure
 
         private void SuperAdventure_Load(object sender, EventArgs e)
         {
-            SetInventoryUI();
             SetQuestUI();
             SetCharacterStats();
             dgvInventory.ScrollBars = ScrollBars.None;
@@ -122,11 +122,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in player.Inventory)
             {
-                if (inventoryItem.Details is Weapon)
+                if (inventoryItem.ItemInfo is Weapon)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        weapons.Add((Weapon)inventoryItem.Details);
+                        weapons.Add((Weapon)inventoryItem.ItemInfo);
                     }
                 }
             }
@@ -165,7 +165,7 @@ namespace SuperAdventure
             MoveTo(player.CurrentLocation.LocationToEast);
         }
 
-        private void MoveTo(Location newLocation)
+        private void MoveTo(ILocation newLocation)
         {
             //Does the location have any required items
             if (!player.HasRequiredItemToEnterLocation(newLocation))
@@ -218,7 +218,7 @@ namespace SuperAdventure
             UpdatePotionListInUI();
         }
 
-        private void QuestCompleted(Location newLocation)
+        private void QuestCompleted(ILocation newLocation)
         {
             bool alreadyRewarded = false;
 
@@ -227,6 +227,7 @@ namespace SuperAdventure
                 _questMessager.CompleteQuestMessage(newLocation);
                 _questMessager.RewardQuestMessage(newLocation);
                 _questMessager.RewardQuest(newLocation);
+                _questMessager.CompleteQuest(newLocation);
 
                 alreadyRewarded = true;
             }
@@ -234,13 +235,13 @@ namespace SuperAdventure
                 _questMessager.AlreadyReveicedQuestMessage();
         }
 
-        private void GainQuest(Location newLocation)
+        private void GainQuest(ILocation newLocation)
         {
             _questMessager.ReceiveQuestMessage(newLocation);
             _questMessager.ReceiveQuest(newLocation);
         }
 
-        private void MonsterCheck(Location newLocation)
+        private void MonsterCheck(ILocation newLocation)
         {
             if (newLocation.MonsterLivingHere != null)
             {
@@ -308,6 +309,7 @@ namespace SuperAdventure
             dgvInventory.Columns[0].Width = 50;
             dgvInventory.Columns[1].Name = "Name";
             dgvInventory.Columns[1].Width = 259;
+            UpdateInventoryList();
         }
 
         private void SetQuestUI()
@@ -329,7 +331,7 @@ namespace SuperAdventure
             {
                 if (inventoryItem.Quantity > 0)
                 {
-                    dgvInventory.Rows.Add(new[] { inventoryItem.Quantity.ToString(), inventoryItem.Details.Name });
+                    dgvInventory.Rows.Add(new[] { inventoryItem.Quantity.ToString(), inventoryItem.ItemInfo.Name });
                 }
             }
         }
@@ -349,11 +351,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in player.Inventory)
             {
-                if (inventoryItem.Details is HealingPotion)
+                if (inventoryItem.ItemInfo is HealingPotion)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        healingPotions.Add((HealingPotion)inventoryItem.Details);
+                        healingPotions.Add((HealingPotion)inventoryItem.ItemInfo);
                     }
                 }
             }
@@ -383,8 +385,6 @@ namespace SuperAdventure
             player.LevelUp();
             charStatistics.statPointsLabel.Text = player.StatPoints.ToString();
             IncreaseExperienceBar();
-            // UpdateEquipmentListInUI();
-            // SetDefensePoints();
             labelHitPoints.Text = player.CurrentHitPoints.ToString();
             labelGold.Text = player.Gold.ToString();
             labelLevel.Text = player.Level.ToString();
@@ -446,15 +446,15 @@ namespace SuperAdventure
         {
             foreach (InventoryItem inventoryItem in lootedItems)
             {
-                player.AddItemToInventory(inventoryItem.Details);
+                player.AddItemToInventory(inventoryItem.ItemInfo);
 
                 if (inventoryItem.Quantity == 1)
                 {
-                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.Name, true);
+                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.Name, true);
                 }
                 else
                 {
-                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Details.NamePlural, true);
+                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.NamePlural, true);
                 }
             }
         }

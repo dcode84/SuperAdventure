@@ -49,11 +49,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.Details is ArmorHelm)
+                if (inventoryItem.ItemInfo is ArmorHelm)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        helmets.Add((ArmorHelm)inventoryItem.Details);
+                        helmets.Add((ArmorHelm)inventoryItem.ItemInfo);
                     }
                 }
             }
@@ -77,11 +77,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.Details is ArmorChest)
+                if (inventoryItem.ItemInfo is ArmorChest)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        chests.Add((ArmorChest)inventoryItem.Details);
+                        chests.Add((ArmorChest)inventoryItem.ItemInfo);
                     }
                 }
             }
@@ -105,11 +105,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.Details is ArmorPants)
+                if (inventoryItem.ItemInfo is ArmorPants)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        pants.Add((ArmorPants)inventoryItem.Details);
+                        pants.Add((ArmorPants)inventoryItem.ItemInfo);
                     }
                 }
             }
@@ -133,11 +133,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.Details is ArmorGloves)
+                if (inventoryItem.ItemInfo is ArmorGloves)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        gloves.Add((ArmorGloves)inventoryItem.Details);
+                        gloves.Add((ArmorGloves)inventoryItem.ItemInfo);
                     }
                 }
             }
