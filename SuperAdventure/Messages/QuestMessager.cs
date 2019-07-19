@@ -22,15 +22,9 @@ namespace SuperAdventure.Messages
 
         public void CompleteQuestMessage(ILocation location)
         {
-            _superAdventure.rtbMessages.AppendText("You have completed the " + location.QuestAvailableHere.Name + " Quest.");
+            _superAdventure.rtbMessages.AppendText("You have completed the " + location.QuestAvailableHere.Name + " quest.");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.ScrollToBottomOfMessages();
-        }
-
-        public void CompleteQuest(ILocation location)
-        {
-            _superAdventure.player.MarkQuestCompleted(location.QuestAvailableHere);
-            _superAdventure.player.RemoveQuestCompletionItems(location.QuestAvailableHere);
         }
 
         public void RewardQuestMessage(ILocation location)
@@ -48,28 +42,6 @@ namespace SuperAdventure.Messages
                 _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             }
 
-            _superAdventure.ScrollToBottomOfMessages();
-        }
-
-        public void RewardQuest(ILocation location)
-        {
-            _superAdventure.player.ExperiencePoints += location.QuestAvailableHere.RewardExperiencePoints;
-            _superAdventure.player.Gold += location.QuestAvailableHere.RewardGold;
-
-            if (location.QuestAvailableHere.RewardItem != null)
-            {
-                _superAdventure.player.AddItemToInventory(location.QuestAvailableHere.RewardItem);
-            }
-        }
-
-        public void ReceiveQuest(ILocation location)
-        {
-            _superAdventure.player.Quests.Add(new PlayerQuest(location.QuestAvailableHere));
-        }
-
-        public void AlreadyReveicedQuestMessage()
-        {
-            _superAdventure.rtbMessages.AppendText("Already received Quest and completed it.");
             _superAdventure.ScrollToBottomOfMessages();
         }
     }
