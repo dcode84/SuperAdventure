@@ -5,15 +5,18 @@ using System.Windows.Forms;
 using Engine;
 using Extensions;
 using SuperAdventure.Messages;
+using SuperAdventure.Processes;
 
 namespace SuperAdventure
 {
     public partial class SuperAdventure : Form
     {
         public Player player;
-        private Monster _currentMonster;
-        private CharacterStatistics charStatistics;
-        private QuestMessager _questMessager;
+        private readonly CharacterStatistics charStatistics;
+        private readonly QuestMessager _questMessager;
+        private readonly QuestProcessor _questProcessor;
+        public CombatMessager _combatMessager;
+        public CombatProcessor _combatProcessor;
 
         public bool charStatisticIsOpen = false;
         public new virtual RightToLeft Right { get; set; }
@@ -23,6 +26,9 @@ namespace SuperAdventure
             InitializeComponent();
             charStatistics = new CharacterStatistics(this);
             _questMessager = new QuestMessager(this);
+            _questProcessor = new QuestProcessor(this);
+            _combatMessager = new CombatMessager(this);
+            _combatProcessor = new CombatProcessor(this);
             player = new Player(20, 1, 0, 1, 1, 1, 0, 10, 10);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             player.Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_RUSTY_SWORD), 1));
@@ -165,7 +171,7 @@ namespace SuperAdventure
             MoveTo(player.CurrentLocation.LocationToEast);
         }
 
-        private void MoveTo(ILocation newLocation)
+        public void MoveTo(ILocation newLocation)
         {
             //Does the location have any required items
             if (!player.HasRequiredItemToEnterLocation(newLocation))
@@ -210,7 +216,7 @@ namespace SuperAdventure
                     GainQuest(newLocation);
                 }
             }
-            MonsterCheck(newLocation);
+            _combatProcessor.MonsterCheck(newLocation);
 
             UpdateInventoryList();
             UpdateQuestList();
@@ -226,55 +232,22 @@ namespace SuperAdventure
             {
                 _questMessager.CompleteQuestMessage(newLocation);
                 _questMessager.RewardQuestMessage(newLocation);
-                _questMessager.RewardQuest(newLocation);
-                _questMessager.CompleteQuest(newLocation);
+                _questProcessor.RewardQuest(newLocation);
+                _questProcessor.CompleteQuest(newLocation);
 
                 alreadyRewarded = true;
             }
             else
-                _questMessager.AlreadyReveicedQuestMessage();
+                _questProcessor.AlreadyReveicedQuestMessage();
         }
 
         private void GainQuest(ILocation newLocation)
         {
             _questMessager.ReceiveQuestMessage(newLocation);
-            _questMessager.ReceiveQuest(newLocation);
+            _questProcessor.ReceiveQuest(newLocation);
         }
 
-        private void MonsterCheck(ILocation newLocation)
-        {
-            if (newLocation.MonsterLivingHere != null)
-            {
-                rtbMessages.AppendText("You see a " + newLocation.MonsterLivingHere.Name, true);
-                ScrollToBottomOfMessages();
-
-                // Make a new monster, using the values from the standard monster in the World.Monster list
-                Monster standardMonster = World.MonsterByID(newLocation.MonsterLivingHere.ID);
-
-                _currentMonster = new Monster(standardMonster.ID, standardMonster.Name, standardMonster.MaximumDamage,
-                    standardMonster.RewardExperiencePoints, standardMonster.RewardGold, standardMonster.CurrentHitPoints, standardMonster.MaximumHitPoints);
-
-                foreach (LootItem lootItem in standardMonster.LootTable)
-                {
-                    _currentMonster.LootTable.Add(lootItem);
-                }
-
-                selectionLabel.Visible = true;
-                cboWeapons.Visible = true;
-                cboPotions.Visible = true;
-                btnUseWeapon.Visible = true;
-                btnUsePotion.Visible = true;
-            }
-            else
-            {
-                _currentMonster = null;
-                selectionLabel.Visible = false;
-                cboWeapons.Visible = false;
-                cboPotions.Visible = false;
-                btnUseWeapon.Visible = false;
-                btnUsePotion.Visible = false;
-            }
-        }
+        
 
         private void SetCharacterStats()
         {
@@ -390,98 +363,19 @@ namespace SuperAdventure
             labelLevel.Text = player.Level.ToString();
         }
 
-        private void DisplayDamageOnMonster(int damageToMonster)
-        {
-            _currentMonster.CurrentHitPoints -= damageToMonster;
-
-            if (damageToMonster <= 0)
-            {
-                rtbMessages.AppendText(Environment.NewLine + "You have missed.", true);
-            }
-            else
-            {
-                string playerDPS = Environment.NewLine + "You've hit the "
-                                                       + _currentMonster.Name + " for " + damageToMonster.ToString() + " damage.";
-                rtbMessages.AppendText(playerDPS, Color.Blue, true);
-            }
-        }
-
-        private void DisplayVictoryText()
-        {
-            rtbMessages.AppendText(Environment.NewLine);
-            rtbMessages.AppendText("You've defeated the " + _currentMonster.Name + ".", true);
-            rtbMessages.AppendText("Gained: ", true);
-            rtbMessages.AppendText(_currentMonster.RewardExperiencePoints + " experience", true);
-            rtbMessages.AppendText(_currentMonster.RewardGold + " gold", true);
-        }
-
-        private void SetExperiencePoints()
-        {
-            if (_currentMonster.RewardExperiencePoints > player.ComputeExperiencePoints)
-            {
-                _currentMonster.RewardExperiencePoints = player.ComputeExperiencePoints;
-                player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
-            }
-            else
-                player.ExperiencePoints += _currentMonster.RewardExperiencePoints;
-        }
-
-        private void SetGold()
-        {
-            player.Gold += _currentMonster.RewardGold;
-        }
-
-        private void RollLoot(List<InventoryItem> lootedItems)
-        {
-            foreach (LootItem lootItem in _currentMonster.LootTable)
-            {
-                if (RandomNumberGenerator.NumberBetween(1, 100) <= lootItem.DropPercentage)
-                {
-                    lootedItems.Add(new InventoryItem(lootItem.Details, 1));
-                }
-            }
-        }
-
-        private void AddItemsToInventory(List<InventoryItem> lootedItems)
-        {
-            foreach (InventoryItem inventoryItem in lootedItems)
-            {
-                player.AddItemToInventory(inventoryItem.ItemInfo);
-
-                if (inventoryItem.Quantity == 1)
-                {
-                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.Name, true);
-                }
-                else
-                {
-                    rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.NamePlural, true);
-                }
-            }
-        }
-
         private void btnUseWeapon_Click(object sender, EventArgs e)
         {
             Weapon currentWeapon = (Weapon)cboWeapons.SelectedItem;
-            int damageToMonster = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
 
-            DisplayDamageOnMonster(damageToMonster);
+            _combatProcessor.DamageOnMonster(currentWeapon);
 
-            if (_currentMonster.CurrentHitPoints <= 0)
+            if (_combatProcessor._currentMonster.CurrentHitPoints <= 0)
             {
-                List<InventoryItem> lootedItems = new List<InventoryItem>();
-
-                DisplayVictoryText();
-                SetExperiencePoints();
-                RollLoot(lootedItems);
-                AddItemsToInventory(lootedItems);
                 UpdateInventoryList();
                 UpdatePotionListInUI();
                 MoveTo(player.CurrentLocation);
             }
-            else
-            {
-                MonsterDPS();
-            }
+
             UpdatePlayerStats();
         }
 
@@ -505,29 +399,7 @@ namespace SuperAdventure
             UpdatePlayerStats();
             UpdateInventoryList();
             UpdatePotionListInUI();
-            MonsterDPS();
-        }
-
-        private void MonsterDPS()
-        {
-            int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaximumDamage);
-            player.CurrentHitPoints -= damageToPlayer;
-            string mobDPS = String.Format("The {0} has hit you for {1} damage.", _currentMonster.Name, damageToPlayer.ToString());
-
-            if (damageToPlayer >= 1)
-            {
-                rtbMessages.AppendText(mobDPS, Color.Red, true);
-            }
-            else
-            {
-                rtbMessages.AppendText("The " + _currentMonster.Name + " has missed.", true);
-            }
-
-            if (player.CurrentHitPoints <= 0)
-            {
-                rtbMessages.AppendText(Environment.NewLine + "You have died.", true);
-                MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
-            }
+            _combatProcessor.MonsterDPS();
         }
 
         private void btnCharacter_Click(object sender, EventArgs e)

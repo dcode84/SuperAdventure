@@ -334,11 +334,6 @@
         private System.Windows.Forms.Label labelHitPoints;
         private System.Windows.Forms.Label labelGold;
         private System.Windows.Forms.Label labelLevel;
-        private System.Windows.Forms.Label selectionLabel;
-        private System.Windows.Forms.ComboBox cboWeapons;
-        private System.Windows.Forms.ComboBox cboPotions;
-        private System.Windows.Forms.Button btnUseWeapon;
-        private System.Windows.Forms.Button btnUsePotion;
         private System.Windows.Forms.Button btnNorth;
         private System.Windows.Forms.Button btnEast;
         private System.Windows.Forms.Button btnSouth;
@@ -350,6 +345,11 @@
         private CustomControls.CustomProgressBar experienceProgressBar;
         private System.Windows.Forms.Label labelDamageReduction;
         public System.Windows.Forms.RichTextBox rtbMessages;
+        public System.Windows.Forms.Label selectionLabel;
+        public System.Windows.Forms.ComboBox cboWeapons;
+        public System.Windows.Forms.ComboBox cboPotions;
+        public System.Windows.Forms.Button btnUseWeapon;
+        public System.Windows.Forms.Button btnUsePotion;
     }
 }
 
