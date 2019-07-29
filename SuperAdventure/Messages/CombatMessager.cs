@@ -24,6 +24,24 @@ namespace SuperAdventure.Messages
             _superAdventure.rtbMessages.AppendText(_superAdventure._combatProcessor._currentMonster.RewardGold + " gold", true);
         }
 
+        public void MonsterSpottedMessage(ILocation newLocation)
+        {
+            _superAdventure.rtbMessages.AppendText(Environment.NewLine);
+            _superAdventure.rtbMessages.AppendText("You see a " + newLocation.MonsterLivingHere.Name, true);
+        }
+
+        public void LootMessage(InventoryItem inventoryItem)
+        {
+            if (inventoryItem.Quantity == 1)
+            {
+                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.Name, true);
+            }
+            else
+            {
+                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.NamePlural, true);
+            }
+        }
+
         public void DisplayDamageOnMonster(int damageToMonster)
         {
             if (damageToMonster <= 0)
@@ -55,7 +73,6 @@ namespace SuperAdventure.Messages
             if (_superAdventure.player.CurrentHitPoints <= 0)
             {
                 _superAdventure.rtbMessages.AppendText(Environment.NewLine + "You have died.", true);
-                _superAdventure.MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             }
         }
     }
