@@ -8,7 +8,7 @@ namespace Engine
 {
     public static class World
     {
-        public static readonly List<Item> Items = new List<Item>();
+        public static readonly List<IItem> Items = new List<IItem>();
         public static readonly List<Monster> Monsters = new List<Monster>();
         public static readonly List<Quest> Quests = new List<Quest>();
         public static readonly List<ILocation> Locations = new List<ILocation>();
@@ -181,9 +181,9 @@ namespace Engine
             #endregion
         }
 
-        public static Item ItemByDB(int id)
+        public static IItem ItemByDB(int id)
         {
-            foreach(Item item in Items)
+            foreach(IItem item in Items)
             {
                 if (item.ID == id)
                     return item;
@@ -211,9 +211,9 @@ namespace Engine
             return null;
         }
 
-        public static Location LocationByID(int id)
+        public static ILocation LocationByID(int id)
         {
-            foreach(Location location in Locations)
+            foreach(ILocation location in Locations)
             {
                 if (location.ID == id)
                     return location;

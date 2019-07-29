@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Item
+    public class Item : IItem
     {
         public int ID { get; set; }
-        public String Name { get; set; }
-        public String NamePlural { get; set; }
+        public string Name { get; set; }
+        public string NamePlural { get; set; }
 
-        public Item(int id, String name, String namePlural)
+        public Item(int id, string name, string namePlural)
         {
             ID = id;
             Name = name;
