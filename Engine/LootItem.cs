@@ -8,11 +8,11 @@ namespace Engine
 {
     public class LootItem
     {
-        public Item Details { get; set; }
+        public IItem Details { get; set; }
         public int DropPercentage { get; set; }
         public bool IsDefaultItem { get; set; }
 
-        public LootItem(Item details, int dropPercentage, bool isDefaultItem = false)
+        public LootItem(IItem details, int dropPercentage, bool isDefaultItem = false)
         {
             Details = details;
             DropPercentage = dropPercentage;

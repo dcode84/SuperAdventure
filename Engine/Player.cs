@@ -88,7 +88,7 @@ namespace Engine
         {
             foreach (QuestCompletionItem questCompletionItem in quest.QuestCompletionItems)
             {
-                if (!Inventory.Exists(inventoryItem => inventoryItem.ItemInfo.ID == questCompletionItem.Details.ID
+                if (!Inventory.Exists(inventoryItem => inventoryItem.ItemInfo.ID == questCompletionItem.ItemInfo.ID
                                       && inventoryItem.Quantity >= questCompletionItem.Quantity)) 
                 {
                     return false;
@@ -103,7 +103,7 @@ namespace Engine
         {
             foreach (QuestCompletionItem questCompletionItem in quest.QuestCompletionItems)
             {
-                InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == questCompletionItem.Details.ID);
+                InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == questCompletionItem.ItemInfo.ID);
 
                 if (item != null)
                     item.Quantity -= questCompletionItem.Quantity;
@@ -111,7 +111,7 @@ namespace Engine
         }
 
         // Check for the item to add, if its null, add 1 to quantity, otherwise increase it by 1
-        public void AddItemToInventory(Item itemToAdd)
+        public void AddItemToInventory(IItem itemToAdd)
         {
             InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == itemToAdd.ID);
 
@@ -122,7 +122,7 @@ namespace Engine
         }
 
         // Check for a potion in the inventory and decrease its quantity by 1 
-        public void RemoveHealingPotionFromInventory(Item potionToRemove)
+        public void RemoveHealingPotionFromInventory(IItem potionToRemove)
         {
             InventoryItem item = Inventory.SingleOrDefault(inventoryItem => inventoryItem.ItemInfo.ID == potionToRemove.ID);
 
