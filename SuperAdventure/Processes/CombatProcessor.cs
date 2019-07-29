@@ -43,7 +43,11 @@ namespace SuperAdventure.Processes
             _superAdventure.player.CurrentHitPoints -= damageToPlayer;
 
             _superAdventure._combatMessager.MonsterDPSToPlayerMessage(damageToPlayer);
+        }
 
+        public void PlayerDied()
+        {
+            _superAdventure.MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
         }
 
         private void AddItemsToInventory(List<InventoryItem> lootedItems)
@@ -52,14 +56,7 @@ namespace SuperAdventure.Processes
             {
                 _superAdventure.player.AddItemToInventory(inventoryItem.ItemInfo);
 
-                if (inventoryItem.Quantity == 1)
-                {
-                    _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.Name, true);
-                }
-                else
-                {
-                    _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.NamePlural, true);
-                }
+                _superAdventure._combatMessager.LootMessage(inventoryItem);
             }
         }
 
@@ -67,8 +64,7 @@ namespace SuperAdventure.Processes
         {
             if (newLocation.MonsterLivingHere != null)
             {
-                _superAdventure.rtbMessages.AppendText("You see a " + newLocation.MonsterLivingHere.Name, true);
-                _superAdventure.ScrollToBottomOfMessages();
+                _superAdventure._combatMessager.MonsterSpottedMessage(newLocation);
 
                 // Make a new monster, using the values from the standard monster in the World.Monster list
                 Monster standardMonster = World.MonsterByID(newLocation.MonsterLivingHere.ID);

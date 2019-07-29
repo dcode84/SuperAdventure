@@ -56,6 +56,11 @@ namespace SuperAdventure
 
         private void rtbMessages_TextChanged(object sender, EventArgs e)
         {
+            DeleteMessagesRowOverflow();
+        }
+
+        private void DeleteMessagesRowOverflow()
+        {
             const int maxIndex = 100;
             const int indexToRemove = 0;
             rtbMessages.SelectionStart = rtbMessages.GetFirstCharIndexFromLine(indexToRemove);
@@ -374,6 +379,10 @@ namespace SuperAdventure
                 UpdateInventoryList();
                 UpdatePotionListInUI();
                 MoveTo(player.CurrentLocation);
+            }
+            else if (player.CurrentHitPoints <= 0)
+            {
+                _combatProcessor.PlayerDied();
             }
 
             UpdatePlayerStats();
