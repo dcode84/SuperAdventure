@@ -8,17 +8,18 @@ namespace SuperAdventure.Processes
     public class CombatProcessor
     {
         private readonly SuperAdventure _superAdventure;
-        public Monster _currentMonster;
+        public IMonster _currentMonster;
+        public CombatMessager _combatMessager;
 
         public CombatProcessor(SuperAdventure superAdventure)
         {
             _superAdventure = superAdventure;
         }
 
-        public void DamageOnMonster(Weapon currentWeapon)
+        public void DamageOnMonster(IWeapon currentWeapon)
         {
             int damageToMonster = RandomNumberGenerator.NumberBetween(currentWeapon.MinimumDamage, currentWeapon.MaximumDamage);
-            _superAdventure._combatProcessor._currentMonster.CurrentHitPoints -= damageToMonster;
+            _currentMonster.CurrentHitPoints -= damageToMonster;
             _superAdventure._combatMessager.DisplayDamageOnMonster(damageToMonster);
 
             if (_currentMonster.CurrentHitPoints <= 0)
@@ -39,7 +40,7 @@ namespace SuperAdventure.Processes
 
         public void MonsterDPS()
         {
-            int damageToPlayer = RandomNumberGenerator.NumberBetween(0, _currentMonster.MaximumDamage);
+            int damageToPlayer = RandomNumberGenerator.NumberBetween(_currentMonster.MinimumDamage, _currentMonster.MaximumDamage);
             _superAdventure.player.CurrentHitPoints -= damageToPlayer;
 
             _superAdventure._combatMessager.MonsterDPSToPlayerMessage(damageToPlayer);
@@ -54,7 +55,7 @@ namespace SuperAdventure.Processes
         {
             foreach (InventoryItem inventoryItem in lootedItems)
             {
-                _superAdventure.player.AddItemToInventory(inventoryItem.ItemInfo);
+                _superAdventure.player.AddItemToInventory(inventoryItem.Item);
 
                 _superAdventure._combatMessager.LootMessage(inventoryItem);
             }
@@ -67,11 +68,15 @@ namespace SuperAdventure.Processes
                 _superAdventure._combatMessager.MonsterSpottedMessage(newLocation);
 
                 // Make a new monster, using the values from the standard monster in the World.Monster list
-                Monster standardMonster = World.MonsterByID(newLocation.MonsterLivingHere.ID);
+                IMonster standardMonster = World.MonsterByID(newLocation.MonsterLivingHere.ID);
 
                 _currentMonster = new Monster(
                     standardMonster.ID, 
                     standardMonster.Name, 
+                    standardMonster.Strength,
+                    standardMonster.Intelligence,
+                    standardMonster.Vitality,
+                    standardMonster.MinimumDamage,
                     standardMonster.MaximumDamage,
                     standardMonster.RewardExperiencePoints, 
                     standardMonster.RewardGold, 
@@ -123,7 +128,7 @@ namespace SuperAdventure.Processes
             {
                 if (RandomNumberGenerator.NumberBetween(1, 100) <= lootItem.DropPercentage)
                 {
-                    lootedItems.Add(new InventoryItem(lootItem.Details, 1));
+                    lootedItems.Add(new InventoryItem(lootItem.Item, 1));
                 }
             }
         }

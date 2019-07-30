@@ -12,14 +12,14 @@ namespace Engine
         public string Name { get; set; }
         public string Description { get; set; }
         public IItem ItemRequiredToEnter { get; set; }
-        public Quest QuestAvailableHere { get; set; }
-        public Monster MonsterLivingHere { get; set; }
+        public IQuest QuestAvailableHere { get; set; }
+        public IMonster MonsterLivingHere { get; set; }
         public ILocation LocationToNorth { get; set; }
         public ILocation LocationToEast { get; set; }
         public ILocation LocationToSouth { get; set; }
         public ILocation LocationToWest { get; set; }
 
-        public Location(int id, string name, string description, IItem itemRequiredToEnter = null, Quest questAvailableHere = null, Monster monsterLivesHere = null)
+        public Location(int id, string name, string description, IItem itemRequiredToEnter = null, IQuest questAvailableHere = null, IMonster monsterLivesHere = null)
         {
             ID = id;
             Name = name;

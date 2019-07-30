@@ -9,8 +9,8 @@ namespace Engine
     public static class World
     {
         public static readonly List<IItem> Items = new List<IItem>();
-        public static readonly List<Monster> Monsters = new List<Monster>();
-        public static readonly List<Quest> Quests = new List<Quest>();
+        public static readonly List<IMonster> Monsters = new List<IMonster>();
+        public static readonly List<IQuest> Quests = new List<IQuest>();
         public static readonly List<ILocation> Locations = new List<ILocation>();
 
         #region IDs
@@ -75,15 +75,15 @@ namespace Engine
 
         private static void PopulateMonsters()
         {
-            Monster rat = new Monster(MONSTER_ID_RAT, "Rat", 5, 85, 10, 3, 3);
+            IMonster rat = new Monster(MONSTER_ID_RAT, "Rat", 1, 1, 1, 0, 5, 85, 10, 3, 3);
             rat.LootTable.Add(new LootItem(ItemByDB(ITEM_ID_RAT_TAIL), 75));
             rat.LootTable.Add(new LootItem(ItemByDB(ITEM_ID_PIECE_OF_FUR), 75));
 
-            Monster snake = new Monster(MONSTER_ID_SNAKE, "Snake", 5, 3, 10, 3, 3);
+            IMonster snake = new Monster(MONSTER_ID_SNAKE, "Snake", 1, 1, 1, 0, 5, 3, 10, 3, 3);
             snake.LootTable.Add(new LootItem(ItemByDB(ITEM_ID_SNAKE_FANG), 75));
             snake.LootTable.Add(new LootItem(ItemByDB(ITEM_ID_SNAKE_SKIN), 75));
 
-            Monster giantSpider = new Monster(MONSTER_ID_GIANT_SPIDER, "Giant Spider", 20, 5, 40, 10, 10);
+            IMonster giantSpider = new Monster(MONSTER_ID_GIANT_SPIDER, "Giant Spider", 1, 1, 1, 10, 20, 5, 40, 10, 10);
             giantSpider.LootTable.Add(new LootItem(ItemByDB(ITEM_ID_SPIDER_FANG), 75));
             giantSpider.LootTable.Add(new LootItem(ItemByDB(ITEM_ID_SPIDER_SILK), 25));
 
@@ -94,7 +94,7 @@ namespace Engine
 
         private static void PopulateQuests()
         {
-            Quest clearAlchemistGarden =
+            IQuest clearAlchemistGarden =
             new Quest(
                 QUEST_ID_CLEAR_ALCHEMIST_GARDEN,
                 "Clear the alchemist's garden",
@@ -103,7 +103,7 @@ namespace Engine
             clearAlchemistGarden.QuestCompletionItems.Add(new QuestCompletionItem(ItemByDB(ITEM_ID_RAT_TAIL), 3));
             clearAlchemistGarden.RewardItem = ItemByDB(ITEM_ID_HEALING_POTION);
 
-            Quest clearFarmersField =
+            IQuest clearFarmersField =
             new Quest(
                 QUEST_ID_CLEAR_FARMERS_FIELD,
                 "Clear the farmer's garden",
@@ -191,9 +191,9 @@ namespace Engine
             return null;
         }
 
-        public static Monster MonsterByID(int id)
+        public static IMonster MonsterByID(int id)
         {
-            foreach(Monster monster in Monsters)
+            foreach(IMonster monster in Monsters)
             {
                 if (monster.ID == id)
                     return monster;
@@ -201,9 +201,9 @@ namespace Engine
             return null;
         }
 
-        public static Quest QuestByID(int id)
+        public static IQuest QuestByID(int id)
         {
-            foreach(Quest quest in Quests)
+            foreach(IQuest quest in Quests)
             {
                 if (quest.ID == id)
                     return quest;

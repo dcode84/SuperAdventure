@@ -34,11 +34,11 @@ namespace SuperAdventure.Messages
         {
             if (inventoryItem.Quantity == 1)
             {
-                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.Name, true);
+                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Item.Name, true);
             }
             else
             {
-                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.ItemInfo.NamePlural, true);
+                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Item.NamePlural, true);
             }
         }
 

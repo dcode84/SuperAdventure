@@ -26,6 +26,7 @@ namespace SuperAdventure.Processes
             {
                 _superAdventure.player.AddItemToInventory(location.QuestAvailableHere.RewardItem);
             }
+            _superAdventure.UpdateInventoryList();
         }
 
         public void ReceiveQuest(ILocation location)

@@ -9,8 +9,8 @@
         ILocation LocationToNorth { get; set; }
         ILocation LocationToSouth { get; set; }
         ILocation LocationToWest { get; set; }
-        Monster MonsterLivingHere { get; set; }
+        IMonster MonsterLivingHere { get; set; }
         string Name { get; set; }
-        Quest QuestAvailableHere { get; set; }
+        IQuest QuestAvailableHere { get; set; }
     }
 }
