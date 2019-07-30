@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class HealingPotion : IItem
-    {      
+    public class HealingPotion : IHealingPotion, IItem
+    {
         public int AmountToHeal { get; set; }
         public int ID { get; set; }
         public string Name { get; set; }
         public string NamePlural { get; set; }
 
-        public HealingPotion (int id, string name, string namePlural, int amountToHeal)
+        public HealingPotion(int id, string name, string namePlural, int amountToHeal)
         {
             ID = id;
             Name = name;

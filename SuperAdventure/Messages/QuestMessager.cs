@@ -13,6 +13,7 @@ namespace SuperAdventure.Messages
 
         public void ReceiveQuestMessage(ILocation location)
         {
+            _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.rtbMessages.AppendText("You receive the " + location.QuestAvailableHere.Name + " quest");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.rtbMessages.AppendText(location.QuestAvailableHere.Description);
@@ -22,6 +23,7 @@ namespace SuperAdventure.Messages
 
         public void CompleteQuestMessage(ILocation location)
         {
+            _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.rtbMessages.AppendText("You have completed the " + location.QuestAvailableHere.Name + " quest.");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.ScrollToBottomOfMessages();
@@ -29,6 +31,7 @@ namespace SuperAdventure.Messages
 
         public void RewardQuestMessage(ILocation location)
         {
+            _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.rtbMessages.AppendText("You receive: ");
             _superAdventure.rtbMessages.AppendText(Environment.NewLine);
             _superAdventure.rtbMessages.AppendText(location.QuestAvailableHere.RewardExperiencePoints.ToString() + " experience points");

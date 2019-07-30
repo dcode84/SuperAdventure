@@ -8,12 +8,12 @@ namespace Engine
 {
     public class PlayerQuest
     {
-        public Quest Details { get; set; }
+        public IQuest Quest { get; set; }
         public bool IsCompleted { get; set; }
 
-        public PlayerQuest (Quest details)
+        public PlayerQuest (IQuest quest)
         {
-            Details = details;
+            Quest = quest;
             IsCompleted = false;
         }
     }

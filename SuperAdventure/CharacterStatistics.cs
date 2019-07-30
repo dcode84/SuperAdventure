@@ -8,7 +8,7 @@ namespace SuperAdventure
     public partial class CharacterStatistics : Form
     {
         public const int _offset = -14;
-        SuperAdventure _originalParent;
+        private readonly SuperAdventure _originalParent;
 
         public CharacterStatistics(SuperAdventure _parentForm)
         {
@@ -27,6 +27,7 @@ namespace SuperAdventure
         {
             SetCharacterStatisticsLocation();
             UpdateEquipmentListInUI();
+            SetCharacterStats();
         }
 
         private void SetCharacterStatisticsLocation()
@@ -43,17 +44,35 @@ namespace SuperAdventure
             UpdateGlovesListInUI();
         }
 
+        private void SetCharacterStats()
+        {
+            dgvStats.RowHeadersVisible = false;
+            dgvStats.ColumnHeadersVisible = false;
+            dgvStats.ColumnCount = 2;
+            dgvStats.Columns[0].Width = 87;
+            dgvStats.Columns[1].Width = 30;
+
+            dgvStats.DefaultCellStyle.SelectionBackColor = dgvStats.DefaultCellStyle.BackColor;
+            dgvStats.DefaultCellStyle.SelectionForeColor = dgvStats.DefaultCellStyle.ForeColor;
+            dgvStats.Rows.Add("Strength", _originalParent.player.Strength.ToString());
+            dgvStats.Rows.Add("Intelligence", _originalParent.player.Intelligence.ToString());
+            dgvStats.Rows.Add("Vitality", _originalParent.player.Vitality.ToString());
+            dgvStats.Rows.Add("Defense", _originalParent.player.Defense.ToString());
+
+            dgvStats.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+        }
+
         private void UpdateHelmListInUI()
         {
             List<ArmorHelm> helmets = new List<ArmorHelm>();
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.ItemInfo is ArmorHelm)
+                if (inventoryItem.Item is ArmorHelm)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        helmets.Add((ArmorHelm)inventoryItem.ItemInfo);
+                        helmets.Add((ArmorHelm)inventoryItem.Item);
                     }
                 }
             }
@@ -77,11 +96,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.ItemInfo is ArmorChest)
+                if (inventoryItem.Item is ArmorChest)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        chests.Add((ArmorChest)inventoryItem.ItemInfo);
+                        chests.Add((ArmorChest)inventoryItem.Item);
                     }
                 }
             }
@@ -105,11 +124,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.ItemInfo is ArmorPants)
+                if (inventoryItem.Item is ArmorPants)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        pants.Add((ArmorPants)inventoryItem.ItemInfo);
+                        pants.Add((ArmorPants)inventoryItem.Item);
                     }
                 }
             }
@@ -133,11 +152,11 @@ namespace SuperAdventure
 
             foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
             {
-                if (inventoryItem.ItemInfo is ArmorGloves)
+                if (inventoryItem.Item is ArmorGloves)
                 {
                     if (inventoryItem.Quantity > 0)
                     {
-                        gloves.Add((ArmorGloves)inventoryItem.ItemInfo);
+                        gloves.Add((ArmorGloves)inventoryItem.Item);
                     }
                 }
             }
