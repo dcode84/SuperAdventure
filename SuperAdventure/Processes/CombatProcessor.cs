@@ -56,7 +56,6 @@ namespace SuperAdventure.Processes
             foreach (InventoryItem inventoryItem in lootedItems)
             {
                 _superAdventure.player.AddItemToInventory(inventoryItem.Item);
-
                 _superAdventure._combatMessager.LootMessage(inventoryItem);
             }
         }

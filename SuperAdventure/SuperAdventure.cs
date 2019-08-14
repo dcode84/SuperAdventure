@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Engine;
+using Engine.EventArgs;
 using Extensions;
 using SuperAdventure.Messages;
 using SuperAdventure.Processes;
@@ -12,6 +13,7 @@ namespace SuperAdventure
     public partial class SuperAdventure : Form
     {
         public Player player;
+        //private MessageHandler _gameMessageHandler = new MessageHandler();
         private CharacterStatistics _charStatistics;
         private readonly QuestMessager _questMessager;
         private readonly QuestProcessor _questProcessor;
@@ -20,6 +22,8 @@ namespace SuperAdventure
 
         public bool charStatisticIsOpen = false;
         public new virtual RightToLeft Right { get; set; }
+
+        //public event EventHandler<GameMessageEventArgs> OnMessageRaised;
 
         public SuperAdventure()
         {
@@ -31,6 +35,7 @@ namespace SuperAdventure
             _combatProcessor = new CombatProcessor(this);
             _charStatistics = new CharacterStatistics(this);
             player = new Player(20, 1, 0, 1, 1, 1, 0, 10, 10);
+            //OnMessageRaised += DisplayMessage;
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             SetInventoryUI();
             UpdatePlayerStats();
@@ -38,6 +43,9 @@ namespace SuperAdventure
             dgvQuests.MouseWheel += new MouseEventHandler(dgvQuests_MouseWheel);
             this.Move += new EventHandler(MoveSubForm);
             this.Resize += new EventHandler(MoveSubForm);
+            //RaiseInformation("Pewwwwww");
+            //RaiseWarning("Meeeeeeeeow", Color.Red);
+            //RaiseWarning("fuuuuu", Color.Blue);
         }
 
         private void SuperAdventure_Load(object sender, EventArgs e)
@@ -52,6 +60,43 @@ namespace SuperAdventure
         private void rtbMessages_TextChanged(object sender, EventArgs e)
         {
             DeleteMessagesRowOverflow();
+            ScrollToBottomOfMessages();
+        }
+
+
+        //public void RaiseInformation(string message, bool addNewLine = false)
+        //{
+        //    if (OnMessageRaised != null)
+        //    {
+        //        OnMessageRaised(this, new GameMessageEventArgs(message, addNewLine));
+        //    }
+        //}
+
+        //public void RaiseWarning(string message, Color color, bool addNewLine = false)
+        //{
+        //    if (OnMessageRaised != null)
+        //    {
+        //        OnMessageRaised(this, new GameMessageEventArgs(message, color, addNewLine));
+        //    }
+        //}
+
+        public void DisplayMessage(object sender, GameMessageEventArgs gameMessageEventArgs)
+        {
+            if (gameMessageEventArgs.Color == null)
+            {
+                rtbMessages.AppendText(gameMessageEventArgs.Message + Environment.NewLine);
+            }
+            else
+            {
+                rtbMessages.AppendText(gameMessageEventArgs.Message, gameMessageEventArgs.Color, true);
+            }
+
+            if (gameMessageEventArgs.AddNewLine == true)
+            {
+                rtbMessages.AppendText(Environment.NewLine);
+            }
+
+            //ScrollToBottomOfMessages();
         }
 
         private void DeleteMessagesRowOverflow()
@@ -70,7 +115,7 @@ namespace SuperAdventure
                 }
                 rtbMessages.ReadOnly = true;
             }
-            ScrollToBottomOfMessages();
+            //ScrollToBottomOfMessages();
         }
 
         private void SelectMessagesIndex()
@@ -278,12 +323,17 @@ namespace SuperAdventure
         {
             dgvQuests.DefaultCellStyle.SelectionBackColor = dgvQuests.DefaultCellStyle.BackColor;
             dgvQuests.DefaultCellStyle.SelectionForeColor = dgvQuests.DefaultCellStyle.ForeColor;
+            dgvQuests.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgvQuests.CellBorderStyle = DataGridViewCellBorderStyle.Single;
+            dgvQuests.EnableHeadersVisualStyles = false;
+            dgvQuests.GridColor = Color.Gray;
+
             dgvQuests.RowHeadersVisible = false;
             dgvQuests.ColumnCount = 2;
             dgvQuests.Columns[0].Name = "Name";
-            dgvQuests.Columns[0].Width = 198;
+            dgvQuests.Columns[0].Width = 239;
             dgvQuests.Columns[1].Name = "Completed";
-            dgvQuests.Columns[1].Width = 110;
+            dgvQuests.Columns[1].Width = 70;
         }
 
         public void UpdateInventoryList()
