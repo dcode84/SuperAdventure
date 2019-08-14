@@ -1,44 +1,44 @@
-﻿using Engine;
+﻿using Engine.Utilities;
+using Engine;
 using System;
 using System.Drawing;
 using Extensions;
-using SuperAdventure.Processes;
 
 namespace SuperAdventure.Messages
 {
-    public class CombatMessager
+    public class CombatMessager : MessageUtilities
     {
         private readonly SuperAdventure _superAdventure;
 
         public CombatMessager(SuperAdventure superAdventure)
         {
             _superAdventure = superAdventure;
+            OnMessageRaised += _superAdventure.DisplayMessage;
         }
 
         public void DisplayVictoryText()
         {
-            _superAdventure.rtbMessages.AppendText(Environment.NewLine);
-            _superAdventure.rtbMessages.AppendText("You've defeated the " + _superAdventure._combatProcessor._currentMonster.Name + ".", true);
-            _superAdventure.rtbMessages.AppendText("Gained: ", true);
-            _superAdventure.rtbMessages.AppendText(_superAdventure._combatProcessor._currentMonster.RewardExperiencePoints + " experience", true);
-            _superAdventure.rtbMessages.AppendText(_superAdventure._combatProcessor._currentMonster.RewardGold + " gold", true);
+            RaiseInfo("You've defeated the " + _superAdventure._combatProcessor._currentMonster.Name + ".", true);
+            RaiseMessage("Gained: ");
+            RaiseMessage(_superAdventure._combatProcessor._currentMonster.RewardExperiencePoints + " experiene");
+            RaiseMessage(_superAdventure._combatProcessor._currentMonster.RewardGold + " gold");
         }
 
         public void MonsterSpottedMessage(ILocation newLocation)
         {
-            _superAdventure.rtbMessages.AppendText(Environment.NewLine);
-            _superAdventure.rtbMessages.AppendText("You see a " + newLocation.MonsterLivingHere.Name, true);
+            RaiseMessage("");
+            RaiseInfo("You see a " + newLocation.MonsterLivingHere.Name, true);
         }
 
         public void LootMessage(InventoryItem inventoryItem)
         {
             if (inventoryItem.Quantity == 1)
             {
-                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Item.Name, true);
+                RaiseMessage("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Item.Name);
             }
             else
             {
-                _superAdventure.rtbMessages.AppendText("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Item.NamePlural, true);
+                RaiseMessage("You loot " + inventoryItem.Quantity.ToString() + " " + inventoryItem.Item.NamePlural);
             }
         }
 
@@ -46,13 +46,14 @@ namespace SuperAdventure.Messages
         {
             if (damageToMonster <= 0)
             {
-                _superAdventure.rtbMessages.AppendText(Environment.NewLine + "You have missed.", true);
+                RaiseInfo("You have missed.");
             }
             else
             {
-                string playerDPS = Environment.NewLine + "You've hit the "
-                                                       + _superAdventure._combatProcessor._currentMonster.Name + " for " + damageToMonster.ToString() + " damage.";
-                _superAdventure.rtbMessages.AppendText(playerDPS, Color.Blue, true);
+                string playerDPS = "You've hit the "
+                                 + _superAdventure._combatProcessor._currentMonster.Name 
+                                 + " for " + damageToMonster.ToString() + " damage.";
+                RaiseInfo(playerDPS);
             }
         }
 
@@ -63,16 +64,16 @@ namespace SuperAdventure.Messages
 
             if (damageToPlayer >= 1)
             {
-                _superAdventure.rtbMessages.AppendText(mobDPS, Color.Red, true);
+                RaiseWarning(mobDPS, true);
             }
             else
             {
-                _superAdventure.rtbMessages.AppendText("The " + _superAdventure._combatProcessor._currentMonster.Name + " has missed.", true);
+                RaiseWarning("The " + _superAdventure._combatProcessor._currentMonster.Name + " has missed.", true);
             }
 
             if (_superAdventure.player.CurrentHitPoints <= 0)
             {
-                _superAdventure.rtbMessages.AppendText(Environment.NewLine + "You have died.", true);
+                RaiseWarning(Environment.NewLine + "You have died.", true);
             }
         }
     }
