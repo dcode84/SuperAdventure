@@ -1,6 +1,7 @@
 ﻿using Engine;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace SuperAdventure
@@ -8,32 +9,37 @@ namespace SuperAdventure
     public partial class CharacterStatistics : Form
     {
         public const int _offset = -14;
-        private readonly SuperAdventure _originalParent;
 
-        public CharacterStatistics(SuperAdventure _parentForm)
+        private readonly SuperAdventure _superAdventure;
+        private int _helmDefense;
+        private int _chestDefense;
+        private int _pantsDefense;
+        private int _handsDefense;
+
+        public CharacterStatistics(SuperAdventure superAdventure)
         {
             InitializeComponent();
-            _originalParent = _parentForm;
+            _superAdventure = superAdventure;
+            UpdateEquipmentListInUI();
         }
 
         private void CharacterStatistics_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.Hide();
-            _originalParent.charStatisticIsOpen = false;
+            _superAdventure.charStatisticIsOpen = false;
             e.Cancel = true;
         }
 
         private void CharacterStatistics_Load(object sender, EventArgs e)
         {
             SetCharacterStatisticsLocation();
-            UpdateEquipmentListInUI();
-            SetCharacterStats();
+            ConfigureCharacterStatsUI();
         }
 
         private void SetCharacterStatisticsLocation()
         {
-            this.Left = _originalParent.Left + _originalParent.Width + _offset;
-            this.Top = _originalParent.Top;
+            this.Left = _superAdventure.Left + _superAdventure.Width + _offset;
+            this.Top = _superAdventure.Top;
         }
 
         private void UpdateEquipmentListInUI()
@@ -44,8 +50,9 @@ namespace SuperAdventure
             UpdateGlovesListInUI();
         }
 
-        private void SetCharacterStats()
+        public void ConfigureCharacterStatsUI()
         {
+            dgvStats.Rows.Clear();
             dgvStats.RowHeadersVisible = false;
             dgvStats.ColumnHeadersVisible = false;
             dgvStats.ColumnCount = 2;
@@ -54,19 +61,23 @@ namespace SuperAdventure
 
             dgvStats.DefaultCellStyle.SelectionBackColor = dgvStats.DefaultCellStyle.BackColor;
             dgvStats.DefaultCellStyle.SelectionForeColor = dgvStats.DefaultCellStyle.ForeColor;
-            dgvStats.Rows.Add("Strength", _originalParent.player.Strength.ToString());
-            dgvStats.Rows.Add("Intelligence", _originalParent.player.Intelligence.ToString());
-            dgvStats.Rows.Add("Vitality", _originalParent.player.Vitality.ToString());
-            dgvStats.Rows.Add("Defense", _originalParent.player.Defense.ToString());
-
+            dgvStats.Rows.Add("Strength", _superAdventure.player.Strength.ToString());
+            dgvStats.Rows.Add("Intelligence", _superAdventure.player.Intelligence.ToString());
+            dgvStats.Rows.Add("Vitality", _superAdventure.player.Vitality.ToString());
+            dgvStats.Rows.Add("Defense", _superAdventure.player.Defense.ToString());
+            dgvStats.Rows.Add("StatPoints", _superAdventure.player.StatPoints.ToString());
+           
+            dgvStats.Columns[0].DefaultCellStyle.BackColor = Color.LightGray;
             dgvStats.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
+            dgvStats.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
+            dgvStats.CellBorderStyle = DataGridViewCellBorderStyle.Single;
         }
 
         private void UpdateHelmListInUI()
         {
             List<ArmorHelm> helmets = new List<ArmorHelm>();
 
-            foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
+            foreach (InventoryItem inventoryItem in _superAdventure.player.Inventory)
             {
                 if (inventoryItem.Item is ArmorHelm)
                 {
@@ -94,7 +105,7 @@ namespace SuperAdventure
         {
             List<ArmorChest> chests = new List<ArmorChest>();
 
-            foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
+            foreach (InventoryItem inventoryItem in _superAdventure.player.Inventory)
             {
                 if (inventoryItem.Item is ArmorChest)
                 {
@@ -122,7 +133,7 @@ namespace SuperAdventure
         {
             List<ArmorPants> pants = new List<ArmorPants>();
 
-            foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
+            foreach (InventoryItem inventoryItem in _superAdventure.player.Inventory)
             {
                 if (inventoryItem.Item is ArmorPants)
                 {
@@ -150,7 +161,7 @@ namespace SuperAdventure
         {
             List<ArmorGloves> gloves = new List<ArmorGloves>();
 
-            foreach (InventoryItem inventoryItem in _originalParent.player.Inventory)
+            foreach (InventoryItem inventoryItem in _superAdventure.player.Inventory)
             {
                 if (inventoryItem.Item is ArmorGloves)
                 {
@@ -174,15 +185,51 @@ namespace SuperAdventure
             }
         }
 
-        private void SetDefensePoints()
+        public void SetDefensePoints()
+        {
+            int currentDefensePoints = _helmDefense + _chestDefense + _pantsDefense + _handsDefense;
+            _superAdventure.player.Defense = currentDefensePoints;
+        }
+
+        private void CboHelm_SelectedIndexChanged(object sender, EventArgs e)
         {
             ArmorHelm currentHelm = (ArmorHelm)cboHelm.SelectedItem;
-            ArmorChest currentChest = (ArmorChest)cboChest.SelectedItem;
-            ArmorPants currentPants = (ArmorPants)cboPants.SelectedItem;
-            ArmorGloves currentGloves = (ArmorGloves)cboHands.SelectedItem;
+            _helmDefense = currentHelm.Defense;
 
-            int currentDefensePoints = currentHelm.Defense + currentChest.Defense + currentPants.Defense + currentGloves.Defense;
-            _originalParent.player.Defense = currentDefensePoints;
+            SetDefensePoints();
+            ConfigureCharacterStatsUI();
+        }
+
+        private void CboChest_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ArmorChest currentChest = (ArmorChest)cboChest.SelectedItem;
+            _chestDefense = currentChest.Defense;
+
+            SetDefensePoints();
+            ConfigureCharacterStatsUI();
+        }
+
+        private void CboPants_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ArmorPants currentPants = (ArmorPants)cboPants.SelectedItem;
+            _pantsDefense = currentPants.Defense;
+
+            SetDefensePoints();
+            ConfigureCharacterStatsUI();
+        }
+
+        private void CboHands_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ArmorGloves currentHands = (ArmorGloves)cboHands.SelectedItem;
+            _handsDefense = currentHands.Defense;
+
+            SetDefensePoints();
+            ConfigureCharacterStatsUI();
+        }
+
+        private void DgvStats_SelectionChanged(object sender, EventArgs e)
+        {
+            this.dgvStats.ClearSelection();
         }
     }
 }

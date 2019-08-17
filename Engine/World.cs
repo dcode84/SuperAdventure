@@ -28,6 +28,7 @@ namespace Engine
         public const int ITEM_ID_COTTON_HELM = 12;
         public const int ITEM_ID_COTTON_PANTS = 13;
         public const int ITEM_ID_COTTON_GLOVES = 14;
+        public const int ITEM_ID_CHAIN_MAIL = 15;
 
         public const int MONSTER_ID_RAT = 1;
         public const int MONSTER_ID_SNAKE = 2;
@@ -71,6 +72,7 @@ namespace Engine
             Items.Add(new ArmorChest(ITEM_ID_COTTON_SHIRT, "Cotton Shirt", "Cotton Shirts", 10, "cloth"));
             Items.Add(new ArmorPants(ITEM_ID_COTTON_PANTS, "Cotton Pants", "Cotton Pants", 7, "cloth"));
             Items.Add(new ArmorGloves(ITEM_ID_COTTON_GLOVES, "Cotton Gloves", "Cotton Gloves", 5, "cloth"));
+            Items.Add(new ArmorChest(ITEM_ID_CHAIN_MAIL, "Chain Mail", "Chain Mails", 2, "mail"));
         }
 
         private static void PopulateMonsters()

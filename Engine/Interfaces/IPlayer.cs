@@ -4,8 +4,6 @@ namespace Engine
 {
     public interface IPlayer : ILivingCreature
     {
-        double ComputeDamageReduction { get; }
-        int ComputeExperiencePoints { get; }
         new int CurrentHitPoints { get; set; }
         ILocation CurrentLocation { get; set; }
         int Defense { get; set; }
