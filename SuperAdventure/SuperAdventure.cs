@@ -13,8 +13,7 @@ namespace SuperAdventure
     public partial class SuperAdventure : Form
     {
         public Player player;
-        //private MessageHandler _gameMessageHandler = new MessageHandler();
-        private CharacterStatistics _charStatistics;
+        private readonly CharacterStatistics _charStatistics;
         private readonly QuestMessager _questMessager;
         private readonly QuestProcessor _questProcessor;
         public CombatMessager _combatMessager;
@@ -22,8 +21,6 @@ namespace SuperAdventure
 
         public bool charStatisticIsOpen = false;
         public new virtual RightToLeft Right { get; set; }
-
-        //public event EventHandler<GameMessageEventArgs> OnMessageRaised;
 
         public SuperAdventure()
         {
@@ -33,9 +30,8 @@ namespace SuperAdventure
             _questProcessor = new QuestProcessor(this);
             _combatMessager = new CombatMessager(this);
             _combatProcessor = new CombatProcessor(this);
-            _charStatistics = new CharacterStatistics(this);
             player = new Player(20, 1, 0, 1, 1, 1, 0, 10, 10);
-            //OnMessageRaised += DisplayMessage;
+            _charStatistics = new CharacterStatistics(this);
             MoveTo(World.LocationByID(World.LOCATION_ID_HOME));
             SetInventoryUI();
             UpdatePlayerStats();
@@ -43,15 +39,15 @@ namespace SuperAdventure
             dgvQuests.MouseWheel += new MouseEventHandler(dgvQuests_MouseWheel);
             this.Move += new EventHandler(MoveSubForm);
             this.Resize += new EventHandler(MoveSubForm);
-            //RaiseInformation("Pewwwwww");
-            //RaiseWarning("Meeeeeeeeow", Color.Red);
-            //RaiseWarning("fuuuuu", Color.Blue);
+
+            labelHitPoints.DataBindings.Add("Text", player, "CurrentHitPoints");
+            labelLevel.DataBindings.Add("Text", player, "Level");
+            labelGold.DataBindings.Add("Text", player, "Gold");
         }
 
         private void SuperAdventure_Load(object sender, EventArgs e)
         {
             SetQuestUI();
-            //SetCharacterStats();
             dgvInventory.ScrollBars = ScrollBars.None;
             dgvQuests.ScrollBars = ScrollBars.None;
             MoveSubForm(this, e);
@@ -62,23 +58,6 @@ namespace SuperAdventure
             DeleteMessagesRowOverflow();
             ScrollToBottomOfMessages();
         }
-
-
-        //public void RaiseInformation(string message, bool addNewLine = false)
-        //{
-        //    if (OnMessageRaised != null)
-        //    {
-        //        OnMessageRaised(this, new GameMessageEventArgs(message, addNewLine));
-        //    }
-        //}
-
-        //public void RaiseWarning(string message, Color color, bool addNewLine = false)
-        //{
-        //    if (OnMessageRaised != null)
-        //    {
-        //        OnMessageRaised(this, new GameMessageEventArgs(message, color, addNewLine));
-        //    }
-        //}
 
         public void DisplayMessage(object sender, GameMessageEventArgs gameMessageEventArgs)
         {
@@ -95,8 +74,6 @@ namespace SuperAdventure
             {
                 rtbMessages.AppendText(Environment.NewLine);
             }
-
-            //ScrollToBottomOfMessages();
         }
 
         private void DeleteMessagesRowOverflow()
@@ -115,7 +92,6 @@ namespace SuperAdventure
                 }
                 rtbMessages.ReadOnly = true;
             }
-            //ScrollToBottomOfMessages();
         }
 
         private void SelectMessagesIndex()
@@ -169,12 +145,6 @@ namespace SuperAdventure
                 _charStatistics.Left = this.Left + this.Width + CharacterStatistics._offset;
                 _charStatistics.Top = this.Top;
             }
-        }
-
-        private void SetReductionLabel()
-        {
-            double percentDefense = player.ComputeDamageReduction * 100;
-            labelDamageReduction.Text = string.Format("{0:0.00}", percentDefense);
         }
 
         private void UpdateWeaponListInUI()
@@ -246,8 +216,6 @@ namespace SuperAdventure
             rtbLocation.Text = newLocation.Name + Environment.NewLine + newLocation.Description + Environment.NewLine;
 
             player.CurrentHitPoints = player.MaximumHitPoints;
-
-            labelHitPoints.Text = player.CurrentHitPoints.ToString();
 
             if (newLocation.QuestAvailableHere != null)
             {
@@ -394,12 +362,15 @@ namespace SuperAdventure
 
         private void UpdatePlayerStats()
         {
+            int playerLevel = player.Level;
             player.LevelUp();
-            //_charStatistics.statPointsLabel.Text = player.StatPoints.ToString();
+
+            if (player.Level > playerLevel)
+            {
+                _charStatistics.ConfigureCharacterStatsUI();
+            }
+
             IncreaseExperienceBar();
-            labelHitPoints.Text = player.CurrentHitPoints.ToString();
-            labelGold.Text = player.Gold.ToString();
-            labelLevel.Text = player.Level.ToString();
         }
 
         private void btnUseWeapon_Click(object sender, EventArgs e)
@@ -447,8 +418,6 @@ namespace SuperAdventure
 
         private void btnCharacter_Click(object sender, EventArgs e)
         {
-             _charStatistics.statPointsLabel.Text = player.StatPoints.ToString();
-
             if (charStatisticIsOpen == false)
             {
                 _charStatistics.Show();
@@ -459,7 +428,6 @@ namespace SuperAdventure
                 _charStatistics.Hide();
                 charStatisticIsOpen = false;
             }
-
         }
 
         private void IncreaseExperienceBar()

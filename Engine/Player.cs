@@ -1,36 +1,138 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Engine
 {
-    public class Player : IPlayer
+    public class Player : NotifyPropertyChanged, IPlayer
     {
-        public int Gold { get; set; }
-        public int Level { get; set; }
-        public int ExperiencePoints { get; set; }
-
         private const double growthModifier = 1.618;
+
+        private int _gold;
+        private int _level;
+        private int _experiencePoints;
+        private int _strength;
+        private int _intelligence;
+        private int _vitality;
+        private int _defense;
+        private int _currentHitPoints;
+        private int _maximumHitPoints;
+        private int _statPoints;
+
+        #region Properties
+
+        public int Level
+        {
+            get { return _level; }
+            set
+            {
+                _level = value;
+                OnPropertyChanged("Level");
+            }
+        }
+
+        public int Gold
+        {
+            get { return _gold; }
+            set
+            {
+                _gold = value;
+                OnPropertyChanged("Gold");
+            }
+        }
+
+        public int ExperiencePoints
+        {
+            get { return _experiencePoints; }
+            set
+            {
+                _experiencePoints = value;
+                OnPropertyChanged("ExperiencePoints");
+            }
+        }
+
+        public int Strength
+        {
+            get { return _strength; }
+            set
+            {
+                _strength = value;
+                OnPropertyChanged("Strength");
+            }
+        }
+
+        public int Intelligence
+        {
+            get { return _intelligence; }
+            set
+            {
+                _intelligence = value;
+                OnPropertyChanged("Intelligence");
+            }
+        }
+
+        public int Vitality
+        {
+            get { return _vitality; }
+            set
+            {
+                _vitality = value;
+                OnPropertyChanged("Vitality");
+            }
+        }
+
+        public int Defense
+        {
+            get { return _defense; }
+            set
+            {
+                _defense = value;
+                OnPropertyChanged("Defense");
+            }
+        }
+
+        public int CurrentHitPoints
+        {
+            get { return _currentHitPoints; }
+            set
+            {
+                _currentHitPoints = value;
+                OnPropertyChanged("CurrentHitPoints");
+            }
+        }
+
+        public int MaximumHitPoints
+        {
+            get { return _maximumHitPoints; }
+            set
+            {
+                _maximumHitPoints = value;
+                OnPropertyChanged("MaximumHitPoints");
+            }
+        }
+
+        public int StatPoints
+        {
+            get { return _statPoints; }
+            set
+            {
+                _statPoints = value;
+                OnPropertyChanged("StatPoints");
+            }
+        }
+
         public int ComputeExperiencePoints
         {
             get { return (int)((Level * 50) * (Level * growthModifier)); }
         }
-        public int Strength { get; set; }
-        public int Intelligence { get; set; }
-        public int Vitality { get; set; }
-        public int Defense { get; set; }
         public double ComputeDamageReduction
         {
             get { return (double)Defense / (Defense + 200); }
         }
-        public int StatPoints { get; set; }
         public ILocation CurrentLocation { get; set; }
         public List<InventoryItem> Inventory { get; set; }
         public List<PlayerQuest> Quests { get; set; }
-        public int CurrentHitPoints { get; set; }
-        public int MaximumHitPoints { get; set; }
+
+        #endregion
 
         public Player(int gold, int level, int experiencePoints, int strength, int intelligence, int vitality, int defense, int maximumHitPoints, int currentHitPoints)
         {
@@ -50,6 +152,7 @@ namespace Engine
             Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_SHIRT), 1));
             Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_PANTS), 1));
             Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_COTTON_GLOVES), 1));
+            Inventory.Add(new InventoryItem(World.ItemByDB(World.ITEM_ID_CHAIN_MAIL), 1));
         }
 
         public void LevelUp()
